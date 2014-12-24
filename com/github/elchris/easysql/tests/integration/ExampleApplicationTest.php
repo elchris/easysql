@@ -8,8 +8,8 @@
 
 namespace com\github\elchris\easysql\tests\integration;
 
-use com\github\elchris\easysql\tests\EasySQLUnitTest;
 use com\github\elchris\easysql\EasySQLContext;
+use com\github\elchris\easysql\tests\EasySQLUnitTest;
 
 class WorldModel extends ExampleBaseModel
 {
@@ -19,7 +19,7 @@ class WorldModel extends ExampleBaseModel
      */
     public function getCitiesByCountryCode($countryCode)
     {
-        $q = 'select * from City WHERE CountryCode = ?;';
+        $q = 'SELECT * FROM City WHERE CountryCode = ?;';
         return $this
             ->db()
             ->getAsCollectionOf(
@@ -37,7 +37,7 @@ class WorldModel extends ExampleBaseModel
      */
     public function getCountriesByContinent($continent, $min = 0.00, $max = 100000000.00)
     {
-        $q = 'select * from Country where Continent = :continent and GNP between :min and :max';
+        $q = 'SELECT * FROM Country WHERE Continent = :continent AND GNP BETWEEN :min AND :max';
         $args = array
         (
             'continent' => $continent,
@@ -57,7 +57,7 @@ class WorldModel extends ExampleBaseModel
      */
     public function getCityById($id)
     {
-        $q = 'select * from City WHERE ID = ?;';
+        $q = 'SELECT * FROM City WHERE ID = ?;';
         return $this
             ->db()
             ->getAsCollectionOf(
@@ -68,33 +68,12 @@ class WorldModel extends ExampleBaseModel
     }//getCityById
 
     /**
-     * @param string $code country code, likely FKE
-     * @return Country the country matching the code
-     */
-    public function getCountryByCode($code)
-    {
-        $q = 'select * from Country where Code = ?';
-        $countries = $this
-                        ->db()
-                        ->getAsCollectionOf(
-                            new Country(),
-                            $q,
-                            array($code)
-                        );
-        if (count($countries) > 0) {
-            return $countries[0];
-        } else {
-            return null;
-        }
-    }//getCountryByCode
-
-    /**
      * @param City $city
      */
     public function insertCity(City $city)
     {
         $this->db()->insertSingleBean($city, 'City');
-    }//insertCity
+    }//getCountryByCode
 
     /**
      * @param City[] $cities
@@ -102,13 +81,34 @@ class WorldModel extends ExampleBaseModel
     public function insertCities($cities)
     {
         $this->db()->insertCollectionOfBeans($cities);
-    }//insertCities
+    }//insertCity
 
     public function prepFakeCountry()
     {
         $fakeCountry = $this->getCountryByCode('FKE');
         if (is_null($fakeCountry)) {
             $this->db()->write(self::FAKE_COUNTRY);
+        }
+    }//insertCities
+
+    /**
+     * @param string $code country code, likely FKE
+     * @return Country the country matching the code
+     */
+    public function getCountryByCode($code)
+    {
+        $q = 'SELECT * FROM Country WHERE Code = ?';
+        $countries = $this
+            ->db()
+            ->getAsCollectionOf(
+                new Country(),
+                $q,
+                array($code)
+            );
+        if (count($countries) > 0) {
+            return $countries[0];
+        } else {
+            return null;
         }
     }//prepFakeCountry
 
@@ -135,7 +135,7 @@ class WorldModel extends ExampleBaseModel
 
     public function deleteFakeCities()
     {
-        $q = 'delete from City where CountryCode = "FKE";';
+        $q = 'DELETE FROM City WHERE CountryCode = "FKE";';
         $this->db()->write($q);
     }
 }//WorldModel
@@ -167,6 +167,7 @@ class ExampleApplicationTest extends EasySQLUnitTest
      * @var EasySQLContext $ctx
      */
     private $ctx = null;
+
     public function __construct($name = null, array $data = array(), $dataName = '')
     {
         $this->ctx = new EasySQLContext();
@@ -194,8 +195,8 @@ class ExampleApplicationTest extends EasySQLUnitTest
         $wm = new WorldModel($this->ctx);
         $frenchCities = $wm->getCitiesByCountryCode('FRA');
         $cityNames = array();
-        foreach($frenchCities as $city) {
-            $this->debug($city->Name.': '.$city->Population);
+        foreach ($frenchCities as $city) {
+            $this->debug($city->Name . ': ' . $city->Population);
             array_push($cityNames, $city->Name);
         }
         $this->assertTrue(in_array('Paris', $cityNames));

@@ -39,14 +39,21 @@ class EasySQLContextUnitTest extends EasySQLUnitTest
         $m = new EasySQLConnectionManager($context);
         $m->setNewConfig(CtxTestConfig::getUnitTestConfig());
         $m->getCurrentConfig()->getAsArray();
-        foreach($m->getCurrentConfig()->getAsArray() as $appName => $appConfig) {
+        foreach ($m->getCurrentConfig()->getAsArray() as $appName => $appConfig) {
             $context->setConnectionConfig($appName, $appConfig);
-            $context->setConnection($appName, 'master', new EasySQLDB($appConfig['master']['string'],$appConfig['master']['u'], $appConfig['master']['p'], true));
-            $context->setConnection($appName, 'slave', new EasySQLDB($appConfig['slave']['string'],$appConfig['slave']['u'], $appConfig['slave']['p'], true));
-            $this->assertInstanceOf('com\github\elchris\easysql\IEasySQLDB', $context->getConnections()[$appName]['master']['connection']);
-            $this->assertInstanceOf('com\github\elchris\easysql\IEasySQLDB', $context->getConnections()[$appName]['slave']['connection']);
-            $this->assertInstanceOf('com\github\elchris\easysql\EasySQLDB', $context->getConnections()[$appName]['master']['connection']);
-            $this->assertInstanceOf('com\github\elchris\easysql\EasySQLDB', $context->getConnections()[$appName]['slave']['connection']);
+            $context->setConnection($appName, 'master',
+                new EasySQLDB($appConfig['master']['string'], $appConfig['master']['u'], $appConfig['master']['p'],
+                    true));
+            $context->setConnection($appName, 'slave',
+                new EasySQLDB($appConfig['slave']['string'], $appConfig['slave']['u'], $appConfig['slave']['p'], true));
+            $this->assertInstanceOf('com\github\elchris\easysql\IEasySQLDB',
+                $context->getConnections()[$appName]['master']['connection']);
+            $this->assertInstanceOf('com\github\elchris\easysql\IEasySQLDB',
+                $context->getConnections()[$appName]['slave']['connection']);
+            $this->assertInstanceOf('com\github\elchris\easysql\EasySQLDB',
+                $context->getConnections()[$appName]['master']['connection']);
+            $this->assertInstanceOf('com\github\elchris\easysql\EasySQLDB',
+                $context->getConnections()[$appName]['slave']['connection']);
         }
     }//testContext
 }//EasySQLUnitTest

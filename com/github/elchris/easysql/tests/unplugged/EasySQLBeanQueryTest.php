@@ -28,8 +28,9 @@ class EasySQLBeanQueryTest extends EasySQLUnitTest
         $results = $b->getInsertQueryAndPropsForBeanArrayAndTable($beans);
         $values = $results[0];
         $query = $results[1];
-        $this->assertEquals('insert into testbeanone (propOne,propTwo) values (?,?),(?,?),(?,?);',$query);
-        $this->assertEquals('["propOneValue","propTwoValue","propOneValue","propTwoValue","propOneValue","propTwoValue"]', json_encode($values));
+        $this->assertEquals('INSERT INTO testbeanone (propOne,propTwo) VALUES (?,?),(?,?),(?,?);', $query);
+        $this->assertEquals('["propOneValue","propTwoValue","propOneValue","propTwoValue","propOneValue","propTwoValue"]',
+            json_encode($values));
     }//testGetInsertQueryAndPropsForBeanArrayAndTable
 
     public function testSomething()
@@ -39,7 +40,7 @@ class EasySQLBeanQueryTest extends EasySQLUnitTest
         $results = $b->getInsertQueryAndPropsForBeanTable($bean);
         $values = $results[0];
         $query = $results[1];
-        $this->assertEquals('insert into testbeanone (propOne, propTwo) values (:propOne, :propTwo);', $query);
-        $this->assertEquals('{"propOne":"propOneValue","propTwo":"propTwoValue"}',json_encode($values));
+        $this->assertEquals('INSERT INTO testbeanone (propOne, propTwo) VALUES (:propOne, :propTwo);', $query);
+        $this->assertEquals('{"propOne":"propOneValue","propTwo":"propTwoValue"}', json_encode($values));
     }
 }//EasySQLBeanQueryTest

@@ -64,18 +64,20 @@ class EasySQLBeanQuery
     }//getInsertQueryAndPropsForBeanArrayAndTable
 
     /**
-     * @param IEasySQLBean $bean
-     * @return array
+     * @param string $tableName
+     * @param \ReflectionClass $reflectionBean
+     * @return string
      */
-    private function getPropertiesFromBean(IEasySQLBean $bean)
+    private function getTableName($tableName, $reflectionBean)
     {
-        $props = array();
-        foreach ($bean->getReflectionClass()->getProperties() as $beanProp) {
-            if ($beanProp->isPublic()) {
-                $props[$beanProp->getName()] = $beanProp->getValue($bean);
-            }
+        $table = ' ';
+        if (!is_null($tableName)) {
+            $table .= $tableName;
+            return $table;
+        } else {
+            $table .= strtolower($reflectionBean->getShortName());
+            return $table;
         }
-        return $props;
     }//getPropertiesFromBean
 
     /**
@@ -93,28 +95,26 @@ class EasySQLBeanQuery
     }//getInsertQueryAndPropsForBeanTable
 
     /**
-     * @param string $tableName
-     * @param \ReflectionClass $reflectionBean
-     * @return string
+     * @param IEasySQLBean $bean
+     * @return array
      */
-    private function getTableName($tableName, $reflectionBean)
+    private function getPropertiesFromBean(IEasySQLBean $bean)
     {
-        $table = ' ';
-        if (!is_null($tableName)) {
-            $table .= $tableName;
-            return $table;
-        } else {
-            $table .= strtolower($reflectionBean->getShortName());
-            return $table;
+        $props = array();
+        foreach ($bean->getReflectionClass()->getProperties() as $beanProp) {
+            if ($beanProp->isPublic()) {
+                $props[$beanProp->getName()] = $beanProp->getValue($bean);
+            }
         }
+        return $props;
     }//getTableName
 
     private function getInsertQueryForPropsAndTable($props, $table)
     {
         $columns = implode(', ', array_keys($props));
-        $values = ':'.implode(', :', array_keys($props));
-        $q =    'insert into'
-            .$table.' ('.$columns.') values ('.$values.');';
+        $values = ':' . implode(', :', array_keys($props));
+        $q = 'insert into'
+            . $table . ' (' . $columns . ') values (' . $values . ');';
         return $q;
     }//getInsertQueryForPropsAndTable
 }//EasySQLBeanQuery

@@ -16,7 +16,7 @@ class EasySQLTest extends EasySQLUnitTest
 {
     public function testIsTestMode()
     {
-        $s = new EasySQL(new EasySQLContext(),'application1');
+        $s = new EasySQL(new EasySQLContext(), 'application1');
         $s->setTestMode();
         $this->assertTrue($s->isTestMode());
     }

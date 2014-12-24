@@ -14,6 +14,14 @@ use com\github\elchris\easysql\tests\EasySQLUnitTest;
 
 class MyApp extends ExampleBaseModel
 {
+        private $arrayMode = false;//insertLotsOfCities
+
+    public function __construct(EasySQLContext $ctx, $isArrayMode = false)
+    {
+        $this->arrayMode = $isArrayMode;
+        parent::__construct($ctx);
+    }//getCitiesByCountryCode
+
     public function insertLotsOfCities($number, $oneByOne = false)
     {
         $cityIndex = time();
@@ -23,7 +31,7 @@ class MyApp extends ExampleBaseModel
             $c->CountryCode = "FKE";
             $c->District = "FakeDistrict";
             $c->Population = 9999;
-            $c->Name = 'FakeCity_'.$cityIndex;
+            $c->Name = 'FakeCity_' . $cityIndex;
             $c->ID = $cityIndex;
             if ($oneByOne) {
                 $this->db()->insertSingleBean($c, 'City');
@@ -35,7 +43,7 @@ class MyApp extends ExampleBaseModel
         if (!$oneByOne) {
             $this->db()->insertCollectionOfBeans($cities, 'City');
         }
-    }//insertLotsOfCities
+    }//getCountriesByContinent
 
     /**
      * @param $countryCode
@@ -43,7 +51,7 @@ class MyApp extends ExampleBaseModel
      */
     public function getCitiesByCountryCode($countryCode)
     {
-        $q = 'select * from City WHERE CountryCode = ?;';
+        $q = 'SELECT * FROM City WHERE CountryCode = ?;';
         if ($this->arrayMode) {
             return $this
                 ->db()
@@ -57,7 +65,7 @@ class MyApp extends ExampleBaseModel
                     array($countryCode)
                 );
         }
-    }//getCitiesByCountryCode
+    }//getCityById
 
     /**
      * @param string $continent
@@ -67,7 +75,7 @@ class MyApp extends ExampleBaseModel
      */
     public function getCountriesByContinent($continent, $min = 0.00, $max = 100000000.00)
     {
-        $q = 'select * from Country where Continent = :continent and GNP between :min and :max';
+        $q = 'SELECT * FROM Country WHERE Continent = :continent AND GNP BETWEEN :min AND :max';
         $args = array
         (
             'continent' => $continent,
@@ -77,8 +85,8 @@ class MyApp extends ExampleBaseModel
 
         if ($this->arrayMode) {
             return $this
-                    ->db()
-                    ->getAsArray($q, $args);
+                ->db()
+                ->getAsArray($q, $args);
         } else {
             return $this
                 ->db()
@@ -86,7 +94,7 @@ class MyApp extends ExampleBaseModel
                     new Country(), $q, $args
                 );
         }
-    }//getCountriesByContinent
+    }//getCountryByCode
 
     /**
      * @param int $id
@@ -94,7 +102,7 @@ class MyApp extends ExampleBaseModel
      */
     public function getCityById($id)
     {
-        $q = 'select * from City WHERE ID = ?;';
+        $q = 'SELECT * FROM City WHERE ID = ?;';
         if ($this->arrayMode) {
             return $this
                 ->db()
@@ -108,7 +116,15 @@ class MyApp extends ExampleBaseModel
                     array($id)
                 );
         }
-    }//getCityById
+    }//prepFakeCountry
+
+public function prepFakeCountry()
+    {
+        $fakeCountry = $this->getCountryByCode('FKE');
+        if (is_null($fakeCountry)) {
+            $this->db()->write(self::FAKE_COUNTRY);
+        }
+    }
 
     /**
      * @param string $code country code, likely FKE
@@ -116,28 +132,13 @@ class MyApp extends ExampleBaseModel
      */
     public function getCountryByCode($code)
     {
-        $q = 'select * from Country where Code = ?';
+        $q = 'SELECT * FROM Country WHERE Code = ?';
         $countries = $this->db()->getAsCollectionOf(new Country(), $q, array($code));
         if (count($countries) > 0) {
             return $countries[0];
         } else {
             return null;
         }
-    }//getCountryByCode
-
-    public function prepFakeCountry()
-    {
-        $fakeCountry = $this->getCountryByCode('FKE');
-        if (is_null($fakeCountry)) {
-            $this->db()->write(self::FAKE_COUNTRY);
-        }
-    }//prepFakeCountry
-
-    private $arrayMode = false;
-    public function __construct(EasySQLContext $ctx, $isArrayMode = false)
-    {
-        $this->arrayMode = $isArrayMode;
-        parent::__construct($ctx);
     }//MyApp Constructor
 }//MyApp
 
@@ -147,8 +148,8 @@ class ConnectedApplicationTest extends EasySQLUnitTest
     {
         $a = new MyApp(new EasySQLContext());
         $russianCities = $a->getCitiesByCountryCode('RUS');
-        foreach($russianCities as $city) {
-            $this->assertEquals('RUS',$city->CountryCode);
+        foreach ($russianCities as $city) {
+            $this->assertEquals('RUS', $city->CountryCode);
             $this->assertGreaterThan(1000, $city->Population);
             $this->assertGreaterThan(1, $city->ID);
         }
@@ -158,11 +159,11 @@ class ConnectedApplicationTest extends EasySQLUnitTest
     {
         $a = new MyApp(new EasySQLContext());
         $northAmericanCountries = $a->getCountriesByContinent('North America', 500.0);
-        foreach($northAmericanCountries as $country) {
+        foreach ($northAmericanCountries as $country) {
             $this->assertGreaterThan(500.00, $country->GNP);
         }
         $northAmericanCountries = $a->getCountriesByContinent('North America', 100.0, 100000.0);
-        foreach($northAmericanCountries as $country) {
+        foreach ($northAmericanCountries as $country) {
             $this->assertGreaterThan(100.00, $country->GNP);
             $this->assertLessThan(100000.00, $country->GNP);
             $capital = $a->getCityById($country->Capital)[0];
@@ -174,8 +175,8 @@ class ConnectedApplicationTest extends EasySQLUnitTest
     {
         $a = new MyApp(new EasySQLContext(), true);
         $russianCities = $a->getCitiesByCountryCode('RUS');
-        foreach($russianCities as $city) {
-            $this->assertEquals('RUS',$city['CountryCode']);
+        foreach ($russianCities as $city) {
+            $this->assertEquals('RUS', $city['CountryCode']);
             $this->assertGreaterThan(1000, $city['Population']);
             $this->assertGreaterThan(1, $city['ID']);
         }
@@ -189,20 +190,38 @@ class ConnectedApplicationTest extends EasySQLUnitTest
         $totalCities = 1000;
 
         $start = microtime(true);
-            $a->insertLotsOfCities($totalCities, true);
-            $this->verifyCityCountAndReset($a, $totalCities);
+        $a->insertLotsOfCities($totalCities, true);
+        $this->verifyCityCountAndReset($a, $totalCities);
         $end = microtime(true);
         $timingOne = ($end - $start);
-        $this->debug('timing 1: '.$timingOne);
+        $this->debug('timing 1: ' . $timingOne);
 
         $start = microtime(true);
-            $a->insertLotsOfCities($totalCities, false);
-            $this->verifyCityCountAndReset($a, $totalCities);
+        $a->insertLotsOfCities($totalCities, false);
+        $this->verifyCityCountAndReset($a, $totalCities);
         $end = microtime(true);
         $timingTwo = ($end - $start);
-        $this->debug('timing 2: '.$timingTwo);
-        $this->debug('ratio '.$timingOne/$timingTwo);
+        $this->debug('timing 2: ' . $timingTwo);
+        $this->debug('ratio ' . $timingOne / $timingTwo);
     }//testAccuracyOfCityInserts
+
+    /**
+     * @param MyApp $a
+     * @param int $totalCities
+     * @param bool $skipVerification
+     */
+    private function verifyCityCountAndReset(MyApp $a, $totalCities, $skipVerification = false)
+    {
+        if (!$skipVerification) {
+            $cities = $a->getCitiesByCountryCode('FKE');
+            $this->assertCount($totalCities, $cities);
+        }
+        $a->db()->write('DELETE FROM City WHERE CountryCode = "FKE";');
+        if (!$skipVerification) {
+            $cities = $a->getCitiesByCountryCode('FKE');
+            $this->assertCount(0, $cities);
+        }
+    }//testSpeedOfInserts
 
     public function testSpeedOfInserts()
     {
@@ -216,32 +235,14 @@ class ConnectedApplicationTest extends EasySQLUnitTest
         $this->verifyCityCountAndReset($a, $totalCities, true);
         $end = microtime(true);
         $timingOne = ($end - $start);
-        $this->debug('timing 1: '.$timingOne);
+        $this->debug('timing 1: ' . $timingOne);
 
         $start = microtime(true);
         $a->insertLotsOfCities($totalCities, false);
         $this->verifyCityCountAndReset($a, $totalCities, true);
         $end = microtime(true);
         $timingTwo = ($end - $start);
-        $this->debug('timing 2: '.$timingTwo);
-        $this->debug('ratio '.$timingOne/$timingTwo);
-    }//testSpeedOfInserts
-
-    /**
-     * @param MyApp $a
-     * @param int $totalCities
-     * @param bool $skipVerification
-     */
-    private function verifyCityCountAndReset(MyApp $a, $totalCities, $skipVerification = false)
-    {
-        if (!$skipVerification) {
-            $cities = $a->getCitiesByCountryCode('FKE');
-            $this->assertCount($totalCities, $cities);
-        }
-        $a->db()->write('delete from City where CountryCode = "FKE";');
-        if (!$skipVerification) {
-            $cities = $a->getCitiesByCountryCode('FKE');
-            $this->assertCount(0, $cities);
-        }
+        $this->debug('timing 2: ' . $timingTwo);
+        $this->debug('ratio ' . $timingOne / $timingTwo);
     }//testAccuracyOfCityInserts
 }//ConnectedApplicationTest

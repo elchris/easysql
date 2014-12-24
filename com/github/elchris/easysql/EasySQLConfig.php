@@ -12,14 +12,13 @@ use SebastianBergmann\Exporter\Exception;
 
 class EasySQLConfigApplication
 {
-    private $driver = null;
-    private $master = null;
-    private $slave = null;
-
     const HOST = 'host';
     const DB = 'db';
     const U = 'u';
     const P = 'p';
+    private $driver = null;
+    private $master = null;
+    private $slave = null;
 
     public function __construct($driver)
     {
@@ -28,19 +27,6 @@ class EasySQLConfigApplication
         $this->slave = array();
     }//EasySQLConfigApplication constructor
 
-    private function setProps(&$arr, $host, $db, $u, $p)
-    {
-        $arr[self::HOST] = $host;
-        $arr[self::DB] = $db;
-        $arr[self::U] = $u;
-        $arr[self::P] = $p;
-    }//setProps
-
-    private function isEmpty(&$arr)
-    {
-        return (count($arr, COUNT_RECURSIVE) === 0);
-    }//isEmpty
-
     public function setMaster($host, $db, $username, $password)
     {
         $this->setProps($this->master, $host, $db, $username, $password);
@@ -48,6 +34,19 @@ class EasySQLConfigApplication
             $this->setProps($this->slave, $host, $db, $username, $password);
         }
         return $this;
+    }//setProps
+
+    private function setProps(&$arr, $host, $db, $u, $p)
+    {
+        $arr[self::HOST] = $host;
+        $arr[self::DB] = $db;
+        $arr[self::U] = $u;
+        $arr[self::P] = $p;
+    }//isEmpty
+
+    private function isEmpty(&$arr)
+    {
+        return (count($arr, COUNT_RECURSIVE) === 0);
     }//setMaster
 
     public function setSlave($host, $db, $username, $password)
@@ -62,7 +61,7 @@ class EasySQLConfigApplication
 
     public function getSlaveConnectionString()
     {
-        return $this->driver.':host='.$this->slave[self::HOST].';dbname='.$this->slave[self::DB];
+        return $this->driver . ':host=' . $this->slave[self::HOST] . ';dbname=' . $this->slave[self::DB];
     }//getSlaveConnectionString
 
     public function getSlaveUsername()
@@ -77,7 +76,7 @@ class EasySQLConfigApplication
 
     public function getMasterConnectionString()
     {
-        return $this->driver.':host='.$this->master[self::HOST].';dbname='.$this->master[self::DB];
+        return $this->driver . ':host=' . $this->master[self::HOST] . ';dbname=' . $this->master[self::DB];
     }//getMasterConnectionString
 
     public function getMasterUsername()
@@ -122,6 +121,11 @@ class EasySQLConfig
         return $this->apps[$name];
     }//getApp
 
+    public function getAsJson()
+    {
+        return json_encode($this->getAsArray());
+    }//getAsArray()
+
     /**
      * @return array
      */
@@ -132,11 +136,11 @@ class EasySQLConfig
             $a[$appName] = array();
             $a[$appName][EasySQLQueryAnalyzer::CONNECTION_MASTER] = array();
             $a[$appName][EasySQLQueryAnalyzer::CONNECTION_MASTER][EasySQLConnectionManager::KEY_CONNECTION_STRING]
-                            = $appConfig->getMasterConnectionString();
+                = $appConfig->getMasterConnectionString();
             $a[$appName][EasySQLQueryAnalyzer::CONNECTION_MASTER][EasySQLConnectionManager::KEY_USERNAME]
-                            = $appConfig->getMasterUsername();
+                = $appConfig->getMasterUsername();
             $a[$appName][EasySQLQueryAnalyzer::CONNECTION_MASTER][EasySQLConnectionManager::KEY_PASSWORD]
-                            = $appConfig->getMasterPassword();
+                = $appConfig->getMasterPassword();
             $a[$appName][EasySQLQueryAnalyzer::CONNECTION_MASTER][self::KEY_CONNECTION] = null;
 
             $a[$appName][EasySQLQueryAnalyzer::CONNECTION_SLAVE] = array();
@@ -149,10 +153,5 @@ class EasySQLConfig
             $a[$appName][EasySQLQueryAnalyzer::CONNECTION_SLAVE][self::KEY_CONNECTION] = null;
         }
         return $a;
-    }//getAsArray()
-
-    public function getAsJson()
-    {
-        return json_encode($this->getAsArray());
     }//getAsJson()
 }//EasySQLConfig

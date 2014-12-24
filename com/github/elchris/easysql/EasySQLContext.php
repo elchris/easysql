@@ -45,14 +45,14 @@ class EasySQLContext
         $this->initialized = true;
     }//setInitialized
 
-    public function unsetInitialized()
-    {
-        $this->initialized = false;
-    }//unsetInitialized
-
     public function resetConnections()
     {
         $this->connections = null;
         $this->unsetInitialized();
+    }//unsetInitialized
+
+    public function unsetInitialized()
+    {
+        $this->initialized = false;
     }//resetConnections
 }//EasySQLContext

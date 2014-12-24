@@ -9,19 +9,10 @@
 namespace com\github\elchris\easysql;
 
 
-abstract class EasySQLBean implements IEasySQLBean {
+abstract class EasySQLBean implements IEasySQLBean
+{
 
     private $className = null;
-	/**
-	 * @return string
-	 */
-	public function getClassName()
-	{
-        if (is_null($this->className)) {
-            $this->className = get_class($this);
-        }
-		return $this->className;
-	}//getClassName
 
     /**
      * @return \ReflectionClass
@@ -29,5 +20,16 @@ abstract class EasySQLBean implements IEasySQLBean {
     public function getReflectionClass()
     {
         return new \ReflectionClass($this->getClassName());
+    }//getClassName
+
+    /**
+     * @return string
+     */
+    public function getClassName()
+    {
+        if (is_null($this->className)) {
+            $this->className = get_class($this);
+        }
+        return $this->className;
     }//getReflectionClass
 }//EasySQLBean

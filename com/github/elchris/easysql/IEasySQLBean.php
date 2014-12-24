@@ -17,10 +17,10 @@ namespace com\github\elchris\easysql;
  */
 interface IEasySQLBean
 {
-	/**
-	 * @return string
-	 */
-	public function getClassName();
+    /**
+     * @return string
+     */
+    public function getClassName();
 
     /**
      * @return \ReflectionClass

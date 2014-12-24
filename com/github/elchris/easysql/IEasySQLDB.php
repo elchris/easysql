@@ -1,6 +1,5 @@
 <?php
 namespace com\github\elchris\easysql;
-use com\github\elchris\easysql\IEasySQLDBStatement;
 
 /**
  * Created with PhpStorm.
@@ -10,34 +9,34 @@ use com\github\elchris\easysql\IEasySQLDBStatement;
  */
 interface IEasySQLDB
 {
-	/**
-	 * @return string
-	 */
-	public function getId();
+    /**
+     * @return string
+     */
+    public function getId();
 
-	/**
-	 * @return string
-	 */
-	public function getUsername();
+    /**
+     * @return string
+     */
+    public function getUsername();
 
-	/**
-	 * @return string
-	 */
-	public function getConnectionString();
+    /**
+     * @return string
+     */
+    public function getConnectionString();
 
-	/**
-	 * @param string $query
-	 * @return IEasySQLDBStatement
-	 */
-	public function prepareQuery($query);
+    /**
+     * @param string $query
+     * @return IEasySQLDBStatement
+     */
+    public function prepareQuery($query);
 
-	/**
-	 * @return IEasySQLDBStatement[]
-	 */
-	public function getStatementStash();
+    /**
+     * @return IEasySQLDBStatement[]
+     */
+    public function getStatementStash();
 
-	/**
-	 * @return IEasySQLDBStatement[]
-	 */
-	public function releaseResources();
+    /**
+     * @return IEasySQLDBStatement[]
+     */
+    public function releaseResources();
 }

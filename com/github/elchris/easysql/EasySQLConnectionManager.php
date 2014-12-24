@@ -1,33 +1,33 @@
 <?php
 
 namespace com\github\elchris\easysql;
+
 use SebastianBergmann\Exporter\Exception;
 
 class EasySQLConnectionManager implements IEasySQLConnectionManager
 {
+    const KEY_CONNECTION = 'connection';
+    const KEY_USERNAME = 'u';
+    const KEY_PASSWORD = 'p';
+    const KEY_CONNECTION_STRING = 'string';
     /**
      * @var EasySQLConfig $config
      */
     private static $config = null;
-	const KEY_CONNECTION = 'connection';
-    const KEY_USERNAME = 'u';
-    const KEY_PASSWORD = 'p';
-    const KEY_CONNECTION_STRING = 'string';
-
     private $mocked = false;
     private $context = null;
 
     public function __construct(EasySQLContext $context, $testMode = false)
-	{
-		$this->mocked = $testMode;
+    {
+        $this->mocked = $testMode;
         $this->context = $context;
-	}//EasySQLConnectionManager constructor
+    }//EasySQLConnectionManager constructor
 
-	public function setNewConfig(EasySQLConfig $config)
-	{
+    public function setNewConfig(EasySQLConfig $config)
+    {
         $this->deleteConfig();
-		self::setConfig($config);
-	}//setNewConfig
+        self::setConfig($config);
+    }//setNewConfig
 
     public function deleteConfig()
     {
@@ -38,91 +38,39 @@ class EasySQLConnectionManager implements IEasySQLConnectionManager
     /**
      * @param EasySQLConfig $config
      */
-	private static function setConfig(EasySQLConfig $config)
-	{
-		self::$config = $config;
-	}//setConfig
+    private static function setConfig(EasySQLConfig $config)
+    {
+        self::$config = $config;
+    }//setConfig
 
-	public function getCurrentConfig()
-	{
-		if (!$this->isConfigured()) {
-            throw new Exception('No configuration set');
-		}
-		return self::$config;
-	}//getCurrentConfig
-
-	private function init()
-	{
-		if (!$this->context->isInitialized()) {
-			if (is_null($this->context->getConnections()) || (count($this->context->getConnections()) === 0)) {
-				$this->initConnectionStubs();
-			}
-			$this->context->setInitialized();
-		}
-	}//init
-
-	/**
-	 * @param $string
-	 * @param $u
-	 * @param $p
-	 * @return IEasySQLDB
-	 */
-	private function getNewConnection($string, $u, $p)
-	{
-		return new EasySQLDB($string, $u, $p, $this->mocked);
-	}//getNewConnection
-
-	private function initConnectionStubs()
-	{
-		if ($this->connectionsNotInitialized()) {
-			$connectionConfigs = self::getCurrentConfig()->getAsArray();
-			foreach ($connectionConfigs as $configName => $configTree) {
-                $this->context->setConnectionConfig($configName, $configTree);
-			}
-		}//if connections not yet initialized
-	}//initConnectionStubs
-
-	public function getDbConnection($applicationName, $type)
-	{
-		$this->init();
+    public function getDbConnection($applicationName, $type)
+    {
+        $this->init();
         $this->checkForValidApplicationName($applicationName);
         $this->checkForValidConnectionType($applicationName, $type);
         $this->stashConnectionIfNoneAlreadyExists($applicationName, $type);
         return $this->context->getConnections()[$applicationName][$type][self::KEY_CONNECTION];
-	}//getDbConnection
+    }//getCurrentConfig
 
-	public function releaseResources()
-	{
-		/**
-		 * @var IEasySQLDB[] $releasedConnections
-		 * @var IEasySQLDB $connection
-		 */
-		$releasedConnections = array();
-		foreach ($this->context->getConnections() as $applicationName => $appConnections) {
-			foreach ($appConnections as $masterOrSlave => $connectionSpec) {
-				if ($this->isActiveConnection($connectionSpec)) {
-					$connection = $connectionSpec[self::KEY_CONNECTION];
-					$connection->releaseResources();
-					unset($connectionSpec[self::KEY_CONNECTION]);
-					array_push($releasedConnections, $connection);
-				}//if connection is active, release its resources, and add it to collection
-			}//loop thru master/slave configurations. should only be one of each
-		}//loop thru configured applications
-		return $releasedConnections;
-	}//releaseResources
+    private function init()
+    {
+        if (!$this->context->isInitialized()) {
+            if (is_null($this->context->getConnections()) || (count($this->context->getConnections()) === 0)) {
+                $this->initConnectionStubs();
+            }
+            $this->context->setInitialized();
+        }
+    }//init
 
-	/**
-	 * @param $connectionSpec
-	 * @return bool
-	 */
-	private function isActiveConnection($connectionSpec)
-	{
-		return isset($connectionSpec[self::KEY_CONNECTION])
-		&&
-		!is_null($connectionSpec[self::KEY_CONNECTION])
-		&&
-		$connectionSpec[self::KEY_CONNECTION] instanceof IEasySQLDB;
-	}//isActiveConnection
+    private function initConnectionStubs()
+    {
+        if ($this->connectionsNotInitialized()) {
+            $connectionConfigs = self::getCurrentConfig()->getAsArray();
+            foreach ($connectionConfigs as $configName => $configTree) {
+                $this->context->setConnectionConfig($configName, $configTree);
+            }
+        }//if connections not yet initialized
+    }//getNewConnection
 
     /**
      * @return bool
@@ -130,30 +78,24 @@ class EasySQLConnectionManager implements IEasySQLConnectionManager
     private function connectionsNotInitialized()
     {
         return is_null($this->context->getConnections()) || (count($this->context->getConnections()) === 0);
-    }//connectionsNotInitialized
+    }//initConnectionStubs
 
-    /**
-     * @param $applicationName
-     * @param $type
-     * @return IEasySQLDB
-     */
-    private function getNewConnectionForApplicationAndType($applicationName, $type)
+    public function getCurrentConfig()
     {
-        return $this->getNewConnection(
-            $this->context->getConnections()[$applicationName][$type][self::KEY_CONNECTION_STRING],
-            $this->context->getConnections()[$applicationName][$type][self::KEY_USERNAME],
-            $this->context->getConnections()[$applicationName][$type][self::KEY_PASSWORD]
-        );
-    }//getNewConnectionForApplicationAndType
+        if (!$this->isConfigured()) {
+            throw new Exception('No configuration set');
+        }
+        return self::$config;
+    }//getDbConnection
 
-	public function isConfigured(EasySQLConfig $referenceConfig = null)
+    public function isConfigured(EasySQLConfig $referenceConfig = null)
     {
         $referenceMismatch = false;
         if (!is_null(self::$config) && !is_null($referenceConfig)) {
             $referenceMismatch = ($referenceConfig->getAsJson() !== self::$config->getAsJson());
         }
         return !$referenceMismatch && !is_null(self::$config);
-    }//isConfigured
+    }//releaseResources
 
     /**
      * @param string $applicationName
@@ -163,7 +105,7 @@ class EasySQLConnectionManager implements IEasySQLConnectionManager
         if (!isset($this->context->getConnections()[$applicationName])) {
             throw new Exception('Application Database: ' . $applicationName . ' is not defined');
         }
-    }//checkForValidApplicationName
+    }//isActiveConnection
 
     /**
      * @param string $applicationName
@@ -174,7 +116,7 @@ class EasySQLConnectionManager implements IEasySQLConnectionManager
         if (!isset($this->context->getConnections()[$applicationName][$type])) {
             throw new Exception('Application Database Type: ' . $type . ' was not defined for ' . $applicationName);
         }
-    }//checkForValidConnectionType
+    }//connectionsNotInitialized
 
     /**
      * @param string $applicationName
@@ -188,5 +130,63 @@ class EasySQLConnectionManager implements IEasySQLConnectionManager
                 $this->getNewConnectionForApplicationAndType($applicationName, $type)
             );
         }
+    }//getNewConnectionForApplicationAndType
+
+    /**
+     * @param $applicationName
+     * @param $type
+     * @return IEasySQLDB
+     */
+    private function getNewConnectionForApplicationAndType($applicationName, $type)
+    {
+        return $this->getNewConnection(
+            $this->context->getConnections()[$applicationName][$type][self::KEY_CONNECTION_STRING],
+            $this->context->getConnections()[$applicationName][$type][self::KEY_USERNAME],
+            $this->context->getConnections()[$applicationName][$type][self::KEY_PASSWORD]
+        );
+    }//isConfigured
+
+    /**
+     * @param $string
+     * @param $u
+     * @param $p
+     * @return IEasySQLDB
+     */
+    private function getNewConnection($string, $u, $p)
+    {
+        return new EasySQLDB($string, $u, $p, $this->mocked);
+    }//checkForValidApplicationName
+
+    public function releaseResources()
+    {
+        /**
+         * @var IEasySQLDB[] $releasedConnections
+         * @var IEasySQLDB $connection
+         */
+        $releasedConnections = array();
+        foreach ($this->context->getConnections() as $applicationName => $appConnections) {
+            foreach ($appConnections as $masterOrSlave => $connectionSpec) {
+                if ($this->isActiveConnection($connectionSpec)) {
+                    $connection = $connectionSpec[self::KEY_CONNECTION];
+                    $connection->releaseResources();
+                    unset($connectionSpec[self::KEY_CONNECTION]);
+                    array_push($releasedConnections, $connection);
+                }//if connection is active, release its resources, and add it to collection
+            }//loop thru master/slave configurations. should only be one of each
+        }//loop thru configured applications
+        return $releasedConnections;
+    }//checkForValidConnectionType
+
+    /**
+     * @param $connectionSpec
+     * @return bool
+     */
+    private function isActiveConnection($connectionSpec)
+    {
+        return isset($connectionSpec[self::KEY_CONNECTION])
+        &&
+        !is_null($connectionSpec[self::KEY_CONNECTION])
+        &&
+        $connectionSpec[self::KEY_CONNECTION] instanceof IEasySQLDB;
     }//stashConnectionIfNoneAlreadyExists
 }//EasySQLConnectionManager

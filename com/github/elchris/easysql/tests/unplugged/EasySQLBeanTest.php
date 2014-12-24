@@ -7,6 +7,7 @@
  */
 
 namespace com\github\elchris\easysql\tests;
+
 use com\github\elchris\easysql\EasySQLBean;
 
 class SomeBean extends EasySQLBean
@@ -14,13 +15,14 @@ class SomeBean extends EasySQLBean
 
 }//EasySQLBean
 
-class EasySQLBeanUnitTest extends EasySQLUnitTest {
+class EasySQLBeanUnitTest extends EasySQLUnitTest
+{
 
-	public function testGetClassName()
-	{
-		$b = new SomeBean();
-		$this->assertEquals(get_class($b), $b->getClassName());
-	}//testGetClassName
+    public function testGetClassName()
+    {
+        $b = new SomeBean();
+        $this->assertEquals(get_class($b), $b->getClassName());
+    }//testGetClassName
 
 }//EasySQLBeanUnitTest
  

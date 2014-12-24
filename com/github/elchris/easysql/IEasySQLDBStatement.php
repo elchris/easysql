@@ -1,5 +1,6 @@
 <?php
 namespace com\github\elchris\easysql;
+
 /**
  * Created with PhpStorm.
  * User: chris
@@ -8,69 +9,69 @@ namespace com\github\elchris\easysql;
  */
 interface IEasySQLDBStatement
 {
-	/**
-	 * @return string
-	 */
-	public function getId();
+    /**
+     * @return string
+     */
+    public function getId();
 
-	/**
-	 * @param string $name
-	 * @param string $value
-	 * @return void
-	 */
-	public function bindValueByName($name, $value);
+    /**
+     * @param string $name
+     * @param string $value
+     * @return void
+     */
+    public function bindValueByName($name, $value);
 
-	/**
-	 * @param string $index
-	 * @param int $value
-	 * @return void
-	 */
-	public function bindValueByIndex($index, $value);
+    /**
+     * @param string $index
+     * @param int $value
+     * @return void
+     */
+    public function bindValueByIndex($index, $value);
 
-	/**
-	 * @return array
-	 */
-	public function getNameValueBinds();
+    /**
+     * @return array
+     */
+    public function getNameValueBinds();
 
-	/**
-	 * @return array
-	 */
-	public function getIndexValueBinds();
+    /**
+     * @return array
+     */
+    public function getIndexValueBinds();
 
 
-	/**
-	 * @return object[]
-	 */
-	public function fetchAsCollection();
+    /**
+     * @return object[]
+     */
+    public function fetchAsCollection();
 
-	/**
-	 * @param IEasySQLBean $emptyBeanInstance
-	 * @return IEasySQLBean[]
-	 */
-	public function fetchAsCollectionOf(IEasySQLBean $emptyBeanInstance);
+    /**
+     * @param IEasySQLBean $emptyBeanInstance
+     * @return IEasySQLBean[]
+     */
+    public function fetchAsCollectionOf(IEasySQLBean $emptyBeanInstance);
 
-	/**
-	 * @return void
-	 */
-	public function execute();
+    /**
+     * @return void
+     */
+    public function execute();
 
-	/**
-	 * @return void
-	 */
-	public function beforeQuery();
+    /**
+     * @return void
+     */
+    public function beforeQuery();
 
-	/**
-	 * @return void
-	 */
-	public function afterQuery();
+    /**
+     * @return void
+     */
+    public function afterQuery();
 
-	/**
-	 * @return boolean
-	 */
-	public function isBusy();
+    /**
+     * @return boolean
+     */
+    public function isBusy();
 
-	/**
-	 * @return void
-	 */
-	public function releaseResources();
+    /**
+     * @return void
+     */
+    public function releaseResources();
 }//IEasySQLDBStatement

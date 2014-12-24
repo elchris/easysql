@@ -19,6 +19,15 @@ class EasySQLQueryAnalyzer
     const DELETE = 'DELETE';
     const CALL = 'CALL';
 
+    public function getDbType($q)
+    {
+        if ($this->isReadQuery($q)) {
+            return self::CONNECTION_SLAVE;
+        } else {
+            return self::CONNECTION_MASTER;
+        }
+    }//isReadQuery
+
     /**
      * @param $query
      * @return bool
@@ -42,14 +51,5 @@ class EasySQLQueryAnalyzer
             return false;
         }
         return true;
-    }//isReadQuery
-
-    public function getDbType($q)
-    {
-        if ($this->isReadQuery($q)) {
-            return self::CONNECTION_SLAVE;
-        } else {
-            return self::CONNECTION_MASTER;
-        }
     }//getDbType
 }//EasySQLQueryAnalyzer

@@ -21,8 +21,22 @@ VALUES ('FKE', 'Fakeland', 'Asia', 'South America', 1234.00, 1900, 1232345, 90.0
      * @var EasySQLConfig $config
      */
     private static $config = null;
+    /**
+     * @var EasySQLContext $context
+     */
+    private $context = null;
 
-    private static function getConfig()
+public function __construct(EasySQLContext $ctx)
+    {
+        $this->context = $ctx;
+    }
+
+    public function db()
+    {
+        return new EasySQL($this->context, self::APP_WORLD, self::getConfig());
+    }//MyApp Constructor
+
+        private static function getConfig()
     {
         if (is_null(self::$config)) {
             $fig = new EasySQLConfig(EasySQLConfig::DRIVER_MYSQL);
@@ -31,19 +45,5 @@ VALUES ('FKE', 'Fakeland', 'Asia', 'South America', 1234.00, 1900, 1232345, 90.0
             self::$config = $fig;
         }
         return self::$config;
-    }
-
-    /**
-     * @var EasySQLContext $context
-     */
-    private $context = null;
-    public function __construct(EasySQLContext $ctx)
-    {
-        $this->context = $ctx;
-    }//MyApp Constructor
-
-    public function db()
-    {
-        return new EasySQL($this->context, self::APP_WORLD, self::getConfig());
     }//db
 }//ExampleBaseModel

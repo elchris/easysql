@@ -19,13 +19,13 @@ abstract class EasySQLUnitTest extends \PHPUnit_Framework_TestCase
         return $method->invokeArgs($object, $parameters);
     }//invokeMethod
 
-    public function debug($msg)
-    {
-        print('*** '.$msg."\n");
-    }//debug
-
     public function odebug($o)
     {
         $this->debug(print_r($o, true));
+    }//debug
+
+    public function debug($msg)
+    {
+        print('*** ' . $msg . "\n");
     }//odebug
 }//EasySQLUnitTest

@@ -7,11 +7,12 @@
  */
 
 namespace com\github\elchris\easysql\tests;
-use com\github\elchris\easysql\EasySQLQueryAnalyzer;
-use com\github\elchris\easysql\EasySQLConfig;
+
 use com\github\elchris\easysql\EasySQL;
 use com\github\elchris\easysql\EasySQLBean;
+use com\github\elchris\easysql\EasySQLConfig;
 use com\github\elchris\easysql\EasySQLContext;
+use com\github\elchris\easysql\EasySQLQueryAnalyzer;
 use com\github\elchris\easysql\IEasySQLBean;
 use Exception;
 
@@ -47,65 +48,71 @@ class RealDAO extends EasySQL
 
     public function getStuff()
     {
-        return $this->getAsCollectionOf(new MyBean(), 'select * from table;');
+        return $this->getAsCollectionOf(new MyBean(), 'SELECT * FROM table;');
     }//getStuff
 }//RealDAO
 
 class TestDAO extends EasySQL
 {
-	const DEFAULT_APPLICATION_NAME = 'application1';
+    const DEFAULT_APPLICATION_NAME = 'application1';
 
-	private $query = null;
-	private $name = self::DEFAULT_APPLICATION_NAME;
+    private $query = null;
+    private $name = self::DEFAULT_APPLICATION_NAME;
 
-	public function __construct(EasySQLContext $ctx, $testQuery, $applicationName = self::DEFAULT_APPLICATION_NAME)
-	{
-		$this->query = $testQuery;
-		$this->name = $applicationName;
+    public function __construct(EasySQLContext $ctx, $testQuery, $applicationName = self::DEFAULT_APPLICATION_NAME)
+    {
+        $this->query = $testQuery;
+        $this->name = $applicationName;
         parent::__construct($ctx, $applicationName, TestConfig::getUnitTestConfig());
-	}
-
-	public function isTestMode()
-	{
-		return true;
-	}//isTestMode
+    }
 
     public function isTest()
     {
         $parentIsTest = parent::isTestMode();
         return array($parentIsTest, $this->isTestMode());
+    }//isTestMode
+
+    public function isTestMode()
+    {
+        return true;
     }//isTest()
 
-	/**
-	 * @return string
-	 */
-	public function getApplicationName()
-	{
-		return $this->name;
-	}//getApplicationName
+    /**
+     * @return string
+     */
+    public function getApplicationName()
+    {
+        return $this->name;
+    }//getApplicationName
 
-	public function testDbType()
-	{
-		return $this->qAnalyzer->getDbType($this->query);
-	}//testDbType
+    public function testDbType()
+    {
+        return $this->qAnalyzer->getDbType($this->query);
+    }//testDbType
 
-	public function testIsRead()
-	{
-		return $this->qAnalyzer->isReadQuery($this->query);
-	}//testIsRead
+    public function testIsRead()
+    {
+        return $this->qAnalyzer->isReadQuery($this->query);
+    }//testIsRead
 
-	public function getTestConnectionForQuery()
-	{
-		return $this->getQueryConnection($this->query);
-	}//getTestConnectionForQuery
+    public function getTestConnectionForQuery()
+    {
+        return $this->getQueryConnection($this->query);
+    }//getTestConnectionForQuery
 
     /**
+     * @param array $params
      * @return IEasySQLBean
      */
     public function getMyBeanCollection($params)
     {
         return $this->getAsCollectionOf(new MyBean(), $this->query, $params);
     }//queryStuff
+
+    public function getMyBeanInsertWithTableName()
+    {
+        return $this->getMyBeanInsert('mybean');
+    }//getMyBeanInsert
 
     public function getMyBeanInsert($tableName = null)
     {
@@ -114,12 +121,12 @@ class TestDAO extends EasySQL
         $b->propTwo = 'somethingTwo';
         $this->insertSingleBean($b);
         return $this->beanQuery->getInsertQueryAndPropsForBeanTable($b, $tableName);
-    }//getMyBeanInsert
-
-    public function getMyBeanInsertWithTableName()
-    {
-        return $this->getMyBeanInsert('mybean');
     }//getMyBeanInsertWithTableName
+
+    public function getInsertCollectionOfBeanWithTable()
+    {
+        return $this->getInsertCollectionOfBean('mybean');
+    }//getInsertCollectionOfBeans
 
     public function getInsertCollectionOfBean($tableName = null)
     {
@@ -134,14 +141,10 @@ class TestDAO extends EasySQL
         $b3->propTwo = 'somethingTwo Row 3';
         $this->insertCollectionOfBeans(array($b1, $b2, $b3), $tableName);
         return $this->beanQuery->getInsertQueryAndPropsForBeanArrayAndTable(array($b1, $b2, $b3), $tableName);
-    }//getInsertCollectionOfBeans
-
-    public function getInsertCollectionOfBeanWithTable()
-    {
-        return $this->getInsertCollectionOfBean('mybean');
     }//getInsertCollectionOfBeanWithTable
 
     /**
+     * @param array $params
      * @return object[]
      */
     public function getArrayResults($params)
@@ -159,10 +162,11 @@ class TestDAO extends EasySQL
  * Class EasySQLTest
  * @package com\github\elchris
  */
-class EasySQLBaseTest extends EasySQLUnitTest {
-    const MYBEAN_INSERT = 'insert into mybean (propOne, propTwo) values (:propOne, :propTwo);';
-    const MYBEAN_COLLECTION_INSERT = 'insert into mybean (propOne,propTwo) values (?,?),(?,?),(?,?);';
-    const MYBEAN_COLLECTION_INSERT_YOURBEAN = 'insert into yourbean (propOne,propTwo) values (?,?),(?,?),(?,?);';
+class EasySQLBaseTest extends EasySQLUnitTest
+{
+    const MYBEAN_INSERT = 'INSERT INTO mybean (propOne, propTwo) VALUES (:propOne, :propTwo);';
+    const MYBEAN_COLLECTION_INSERT = 'INSERT INTO mybean (propOne,propTwo) VALUES (?,?),(?,?),(?,?);';
+    const MYBEAN_COLLECTION_INSERT_YOURBEAN = 'INSERT INTO yourbean (propOne,propTwo) VALUES (?,?),(?,?),(?,?);';
 
     /**
      * @expectedException Exception
@@ -173,128 +177,176 @@ class EasySQLBaseTest extends EasySQLUnitTest {
         $t->getStuff();
     }//testReaDaoThrowsException
 
-	public function testConnectionCredentialsForReadQuery()
-	{
-		$test = new TestDAO(new EasySQLContext(), $this->getReadQuery());
-		$u = $test->getTestConnectionForQuery()->getUsername();
-		$this->assertEquals('uname1slave', $u);
-		$cs = $test->getTestConnectionForQuery()->getConnectionString();
-		$this->assertEquals('mysql:host=slaveconnection1.host;dbname=name1', $cs);
-	}//testConnectionCredentialsForReadQuery
+    public function testConnectionCredentialsForReadQuery()
+    {
+        $test = new TestDAO(new EasySQLContext(), $this->getReadQuery());
+        $u = $test->getTestConnectionForQuery()->getUsername();
+        $this->assertEquals('uname1slave', $u);
+        $cs = $test->getTestConnectionForQuery()->getConnectionString();
+        $this->assertEquals('mysql:host=slaveconnection1.host;dbname=name1', $cs);
+    }//testConnectionCredentialsForReadQuery
 
-	/**
-	 * @expectedException Exception
-	 */
-	public function testUnconfiguredNameThrowsException()
-	{
-		$test = new TestDAO(new EasySQLContext(), $this->getReadQuery(), 'SomeNotConfiguredName');
-		$this->assertEquals('SomeNotConfiguredName', $test->getApplicationName());
-		$test->getTestConnectionForQuery();
-	}//testUnconfiguredNameThrowsException
+    /**
+     * @return string
+     */
+    private function getReadQuery()
+    {
+        return EasySQLQueryAnalyzer::SELECT . ' * from blah where huh=2';
+    }//testUnconfiguredNameThrowsException
 
-	public function testSelectIsSlave()
-	{
-		$test = new TestDAO(new EasySQLContext(), $this->getReadQuery());
-		$this->assertEquals(EasySQLQueryAnalyzer::CONNECTION_SLAVE, $test->testDbType());
-		$this->assertTrue($test->testIsRead());
-	}//testSelectIsSlave
+    /**
+     * @expectedException Exception
+     */
+    public function testUnconfiguredNameThrowsException()
+    {
+        $test = new TestDAO(new EasySQLContext(), $this->getReadQuery(), 'SomeNotConfiguredName');
+        $this->assertEquals('SomeNotConfiguredName', $test->getApplicationName());
+        $test->getTestConnectionForQuery();
+    }//testSelectIsSlave
 
-	public function testUpdateIsMaster()
-	{
-		$test = new TestDAO(new EasySQLContext(),$this->getUpdateQuery());
-		$this->assertEquals(EasySQLQueryAnalyzer::CONNECTION_MASTER, $test->testDbType());
-		$this->assertFalse($test->testIsRead());
-	}//testUpdateIsMaster
+    public function testSelectIsSlave()
+    {
+        $test = new TestDAO(new EasySQLContext(), $this->getReadQuery());
+        $this->assertEquals(EasySQLQueryAnalyzer::CONNECTION_SLAVE, $test->testDbType());
+        $this->assertTrue($test->testIsRead());
+    }//testUpdateIsMaster
 
-	public function testInsertIsMaster()
-	{
-		$test = new TestDAO(new EasySQLContext(), $this->getInsertQuery());
-		$this->assertEquals(EasySQLQueryAnalyzer::CONNECTION_MASTER, $test->testDbType());
-		$this->assertFalse($test->testIsRead());
-	}//testInsertIsMaster
+    public function testUpdateIsMaster()
+    {
+        $test = new TestDAO(new EasySQLContext(), $this->getUpdateQuery());
+        $this->assertEquals(EasySQLQueryAnalyzer::CONNECTION_MASTER, $test->testDbType());
+        $this->assertFalse($test->testIsRead());
+    }//testInsertIsMaster
 
-	public function testDeleteIsMaster()
-	{
-		$test = new TestDAO(new EasySQLContext(), $this->getDeleteQuery());
-		$this->assertEquals(EasySQLQueryAnalyzer::CONNECTION_MASTER, $test->testDbType());
-		$this->assertFalse($test->testIsRead());
-	}//testDeleteIsMaster
+    /**
+     * @return string
+     */
+    private function getUpdateQuery()
+    {
+        return EasySQLQueryAnalyzer::UPDATE . ' * from blah where huh=2';
+    }//testDeleteIsMaster
+
+    public function testInsertIsMaster()
+    {
+        $test = new TestDAO(new EasySQLContext(), $this->getInsertQuery());
+        $this->assertEquals(EasySQLQueryAnalyzer::CONNECTION_MASTER, $test->testDbType());
+        $this->assertFalse($test->testIsRead());
+    }//testCallIsMaster
+
+    /**
+     * @return string
+     */
+    private function getInsertQuery()
+    {
+        return EasySQLQueryAnalyzer::INSERT . ' * from blah where huh=2';
+    }//testReadQueryConnectionReuse
+
+    public function testDeleteIsMaster()
+    {
+        $test = new TestDAO(new EasySQLContext(), $this->getDeleteQuery());
+        $this->assertEquals(EasySQLQueryAnalyzer::CONNECTION_MASTER, $test->testDbType());
+        $this->assertFalse($test->testIsRead());
+    }//testWriteQueryConnectionResuse
+
+    /**
+     * @return string
+     */
+    private function getDeleteQuery()
+    {
+        return EasySQLQueryAnalyzer::DELETE . ' * from blah where huh=2';
+    }//testReadWriteConnectionsAreDifferent
 
     public function testCallIsMaster()
     {
         $test = new TestDAO(new EasySQLContext(), $this->getCallQuery());
         $this->assertEquals(EasySQLQueryAnalyzer::CONNECTION_MASTER, $test->testDbType());
         $this->assertFalse($test->testIsRead());
-    }//testCallIsMaster
+    }//testGotArrayOfMyBean
 
-	public function testReadQueryConnectionReuse()
-	{
+    /**
+     * @return string
+     */
+    private function getCallQuery()
+    {
+        return EasySQLQueryAnalyzer::CALL . ' some_sproc()';
+    }//testIsTestModeIsTrue
+
+    public function testReadQueryConnectionReuse()
+    {
         $ctx = new EasySQLContext();
-		$test_one = new TestDAO($ctx, $this->getReadQueryTwo());
-		$test_two = new TestDAO($ctx, $this->getReadQuery());
-		$id_one = $test_one->getTestConnectionForQuery()->getId();
-		$id_two = $test_two->getTestConnectionForQuery()->getId();
-		$this->assertTrue($id_one === $id_two);
-	}//testReadQueryConnectionReuse
+        $test_one = new TestDAO($ctx, $this->getReadQueryTwo());
+        $test_two = new TestDAO($ctx, $this->getReadQuery());
+        $id_one = $test_one->getTestConnectionForQuery()->getId();
+        $id_two = $test_two->getTestConnectionForQuery()->getId();
+        $this->assertTrue($id_one === $id_two);
+    }//testGotGenericArray
 
-	public function testWriteQueryConnectionReuse()
-	{
+    /**
+     * @return string
+     */
+    private function getReadQueryTwo()
+    {
+        return EasySQLQueryAnalyzer::SELECT . ' * from blah where huh=1';
+    }//testWriteSomething
+
+    public function testWriteQueryConnectionReuse()
+    {
         $ctx = new EasySQLContext();
-		$test_three = new TestDAO($ctx, $this->getUpdateQuery());
-		$test_four = new TestDAO($ctx, $this->getDeleteQuery());
-		$test_five = new TestDAO($ctx, $this->getInsertQuery());
+        $test_three = new TestDAO($ctx, $this->getUpdateQuery());
+        $test_four = new TestDAO($ctx, $this->getDeleteQuery());
+        $test_five = new TestDAO($ctx, $this->getInsertQuery());
 
-		$id_three = $test_three->getTestConnectionForQuery()->getId();
-		$id_four = $test_four->getTestConnectionForQuery()->getId();
-		$id_five = $test_five->getTestConnectionForQuery()->getId();
+        $id_three = $test_three->getTestConnectionForQuery()->getId();
+        $id_four = $test_four->getTestConnectionForQuery()->getId();
+        $id_five = $test_five->getTestConnectionForQuery()->getId();
 
-		$this->assertTrue($id_three === $id_four);
-		$this->assertTrue($id_four === $id_five);
-	}//testWriteQueryConnectionResuse
+        $this->assertTrue($id_three === $id_four);
+        $this->assertTrue($id_four === $id_five);
+    }//testBeanInsertionWithoutTableName
 
-	public function testReadWriteConnectionsAreDifferent()
-	{
+    public function testReadWriteConnectionsAreDifferent()
+    {
         $ctx = new EasySQLContext();
-		$test_one = new TestDAO($ctx, $this->getReadQuery());
-		$test_two = new TestDAO($ctx, $this->getReadQueryTwo());
-		$test_three = new TestDAO($ctx, $this->getUpdateQuery());
-		$test_four = new TestDAO($ctx, $this->getDeleteQuery());
-		$test_five = new TestDAO($ctx, $this->getInsertQuery());
+        $test_one = new TestDAO($ctx, $this->getReadQuery());
+        $test_two = new TestDAO($ctx, $this->getReadQueryTwo());
+        $test_three = new TestDAO($ctx, $this->getUpdateQuery());
+        $test_four = new TestDAO($ctx, $this->getDeleteQuery());
+        $test_five = new TestDAO($ctx, $this->getInsertQuery());
 
-		$id_one = $test_one->getTestConnectionForQuery()->getId();
-		$id_two = $test_two->getTestConnectionForQuery()->getId();
-		$id_three = $test_three->getTestConnectionForQuery()->getId();
-		$id_four = $test_four->getTestConnectionForQuery()->getId();
-		$id_five = $test_five->getTestConnectionForQuery()->getId();
+        $id_one = $test_one->getTestConnectionForQuery()->getId();
+        $id_two = $test_two->getTestConnectionForQuery()->getId();
+        $id_three = $test_three->getTestConnectionForQuery()->getId();
+        $id_four = $test_four->getTestConnectionForQuery()->getId();
+        $id_five = $test_five->getTestConnectionForQuery()->getId();
 
-		$this->assertTrue($id_one === $id_two);
-		$this->assertTrue($id_three === $id_four);
-		$this->assertTrue($id_four === $id_five);
-		$this->assertTrue($id_one !== $id_four);
-	}//testReadWriteConnectionsAreDifferent
+        $this->assertTrue($id_one === $id_two);
+        $this->assertTrue($id_three === $id_four);
+        $this->assertTrue($id_four === $id_five);
+        $this->assertTrue($id_one !== $id_four);
+    }//testBeanInsertionWithoutTableName
 
     public function testGotArrayOfMyBean()
     {
         $ctx = new EasySQLContext();
         $test = new TestDAO($ctx, $this->getReadQuery());
         $results = $test->getMyBeanCollection(array('one', 'two', 'three'));
-        foreach($results as $result) {
+        foreach ($results as $result) {
             $this->assertInstanceOf('com\github\elchris\easysql\IEasySQLBean', $result);
             $this->assertInstanceOf('com\github\elchris\easysql\tests\MyBean', $result);
         }
         $results = $test->getMyBeanCollection(array('key1' => 'value1', 'key2' => 'value2'));
-        foreach($results as $result) {
+        foreach ($results as $result) {
             $this->assertInstanceOf('com\github\elchris\easysql\IEasySQLBean', $result);
             $this->assertInstanceOf('com\github\elchris\easysql\tests\MyBean', $result);
         }
-    }//testGotArrayOfMyBean
+    }//testInsertCollectionOfBeans
 
     public function testIsTestModeIsTrue()
     {
         $test = new TestDAO(new EasySQLContext(), $this->getReadQuery());
         $this->assertFalse($test->isTest()[0]);
         $this->assertTrue($test->isTest()[1]);
-    }//testIsTestModeIsTrue
+    }//testInsertCollectionOfBeansWithTableName
 
     public function testGotGenericArray()
     {
@@ -308,8 +360,8 @@ class EasySQLBaseTest extends EasySQLUnitTest {
         $results = $test->getArrayResults($p2);
         $this->assertEquals(3, count($results));
         $statementStash = $test->getTestConnectionForQuery()->getStatementStash();
-        $this->assertArrayHasKey('SELECT * from blah where huh=2', $statementStash);
-    }//testGotGenericArray
+        $this->assertArrayHasKey('SELECT * FROM blah WHERE huh=2', $statementStash);
+    }
 
     public function testWriteSomething()
     {
@@ -317,7 +369,12 @@ class EasySQLBaseTest extends EasySQLUnitTest {
         $test->writeSomething(array('one', 'two', 'three'));
         $connection = $test->getTestConnectionForQuery();
         $this->assertInstanceOf('com\github\elchris\easysql\IEasySQLDB', $connection);
-    }//testWriteSomething
+    }
+
+    private function getWriteQuery()
+    {
+        return $this->getInsertQuery();
+    }
 
     public function testBeanInsertionWithoutTableName()
     {
@@ -328,7 +385,7 @@ class EasySQLBaseTest extends EasySQLUnitTest {
         $this->assertArrayHasKey('propTwo', $values[0]);
         $this->assertEquals('somethingOne', $values[0]['propOne']);
         $this->assertEquals('somethingTwo', $values[0]['propTwo']);
-    }//testBeanInsertionWithoutTableName
+    }
 
     public function testBeanInsertionWithTableName()
     {
@@ -339,7 +396,7 @@ class EasySQLBaseTest extends EasySQLUnitTest {
         $this->assertArrayHasKey('propTwo', $values[0]);
         $this->assertEquals('somethingOne', $values[0]['propOne']);
         $this->assertEquals('somethingTwo', $values[0]['propTwo']);
-    }//testBeanInsertionWithoutTableName
+    }//getWriteQuery
 
     public function testInsertCollectionOfBeans()
     {
@@ -352,7 +409,7 @@ class EasySQLBaseTest extends EasySQLUnitTest {
         $this->assertEquals('somethingTwo Row 2', $results[0][3]);
         $this->assertEquals('somethingOne Row 3', $results[0][4]);
         $this->assertEquals('somethingTwo Row 3', $results[0][5]);
-    }//testInsertCollectionOfBeans
+    }
 
     public function testInsertCollectionOfBeansWithTableName()
     {
@@ -365,59 +422,6 @@ class EasySQLBaseTest extends EasySQLUnitTest {
         $this->assertEquals('somethingTwo Row 2', $results[0][3]);
         $this->assertEquals('somethingOne Row 3', $results[0][4]);
         $this->assertEquals('somethingTwo Row 3', $results[0][5]);
-    }//testInsertCollectionOfBeansWithTableName
-
-	/**
-	 * @return string
-	 */
-	private function getUpdateQuery()
-	{
-		return EasySQLQueryAnalyzer::UPDATE . ' * from blah where huh=2';
-	}
-
-	/**
-	 * @return string
-	 */
-	private function getDeleteQuery()
-	{
-		return EasySQLQueryAnalyzer::DELETE . ' * from blah where huh=2';
-	}
-
-	/**
-	 * @return string
-	 */
-	private function getInsertQuery()
-	{
-		return EasySQLQueryAnalyzer::INSERT . ' * from blah where huh=2';
-	}
-
-    /**
-     * @return string
-     */
-    private function getCallQuery()
-    {
-        return EasySQLQueryAnalyzer::CALL . ' some_sproc()';
-    }
-
-    private function getWriteQuery()
-    {
-        return $this->getInsertQuery();
-    }//getWriteQuery
-
-	/**
-	 * @return string
-	 */
-	private function getReadQuery()
-	{
-		return EasySQLQueryAnalyzer::SELECT . ' * from blah where huh=2';
-	}
-
-	/**
-	 * @return string
-	 */
-	private function getReadQueryTwo()
-	{
-		return EasySQLQueryAnalyzer::SELECT . ' * from blah where huh=1';
-	}//testReadWriteConnectionsAreDifferent
+    }//testReadWriteConnectionsAreDifferent
 }//EasySQLBaseTest
  

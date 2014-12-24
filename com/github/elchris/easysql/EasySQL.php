@@ -1,12 +1,12 @@
 <?php
 namespace com\github\elchris\easysql;
 
-/**
- * Created with PhpStorm.
- * User: chris
- * Date: 11/21/13
- * Time: 8:21 AM
- */
+    /**
+     * Created with PhpStorm.
+     * User: chris
+     * Date: 11/21/13
+     * Time: 8:21 AM
+     */
 
 /**
  *
@@ -67,7 +67,7 @@ namespace com\github\elchris\easysql;
  */
 class EasySQL
 {
-	const NULL_STRING = 'NULL';
+    const NULL_STRING = 'NULL';
 
     /**
      * @var EasySQLContext $context
@@ -77,13 +77,12 @@ class EasySQL
      * @var EasySQLQueryAnalyzer $qAnalyzer
      */
     protected $context = null;
-    private $manager = null;
-    private $config = null;
     protected $beanQuery = null;
     protected $qAnalyzer = null;
-
     protected $appName = null;
     protected $isTestMode = false;
+    private $manager = null;
+    private $config = null;
 
     /**
      * @param EasySQLConfig $config
@@ -100,20 +99,12 @@ class EasySQL
     }//EasySQL Constructor
 
     /**
-     * @return IEasySQLConnectionManager
-     */
-    protected function getNewEasySQLConnectionManager()
-    {
-        return new EasySQLConnectionManager($this->getContext(), $this->isTestMode());
-    }//getNewEasySQLConnectionManager
-
-    /**
      * @return EasySQLBeanQuery
      */
     protected function getNewEasySQLBeanQuery()
     {
         return new EasySQLBeanQuery();
-    }//getNewEasySQLBeanQuery
+    }//getNewEasySQLConnectionManager
 
     /**
      * @return EasySQLQueryAnalyzer
@@ -121,74 +112,31 @@ class EasySQL
     protected function getNewEasySQLQueryAnalyzer()
     {
         return new EasySQLQueryAnalyzer();
-    }//getNewEasySQLQueryAnalyzer
-
-	/**
-	 * @return string
-	 */
-	protected function getApplicationName()
-    {
-        return $this->appName;
-    }//getApplicationName
-
-    /**
-     * @return EasySQLContext
-     */
-    private function getContext()
-    {
-        return $this->context;
-    }//getContext
-
-	/**
-	 * Override this method for mock DAOs
-	 * @return bool
-	 */
-	public function isTestMode()
-	{
-		return $this->isTestMode;
-	}//isTestMode
+    }//getNewEasySQLBeanQuery
 
     public function setTestMode()
     {
         $this->isTestMode = true;
-    }//setTestMode
+    }//getNewEasySQLQueryAnalyzer
 
-	/**
-	 * @param $db
-	 * @param $type
-	 * @return IEasySQLDB
-	 */
-	private function getConnection($db, $type)
-	{
-        $this->manager = $this->getNewEasySQLConnectionManager();
-        if (!$this->manager->isConfigured($this->config)) {
-            $this->manager->setNewConfig($this->config);
-        }
-		return $this->manager->getDbConnection($db, $type);
-	}//getNewConnection
+    public function getAsArray($query, $params = null)
+    {
+        return $this->runQuery($query, $params);
+    }//getApplicationName
 
-	/**
-	 * @param string $query
-	 * @return IEasySQLDB
-	 */
-	protected function getQueryConnection($query)
-	{
-		return $this->getConnection($this->getApplicationName(), $this->qAnalyzer->getDbType($query));
-	}//getQueryConnection
-
-	/**
-	 * @param string $query
-	 * @param array|null $params
-	 * @param IEasySQLBean|null $emptyBean
+    /**
+     * @param string $query
+     * @param array|null $params
+     * @param IEasySQLBean|null $emptyBean
      * @param bool $isWrite is query a write query
-	 * @return IEasySQLBean[]|\object[]
-	 */
-	private function runQuery($query, $params = null, $emptyBean = null, $isWrite = false)
-	{
-		$connection = $this->getQueryConnection($query);
-		$stmt = $connection->prepareQuery($query);
-		$this->bindParams($params, $stmt);
-		$stmt->execute();
+     * @return IEasySQLBean[]|\object[]
+     */
+    private function runQuery($query, $params = null, $emptyBean = null, $isWrite = false)
+    {
+        $connection = $this->getQueryConnection($query);
+        $stmt = $connection->prepareQuery($query);
+        $this->bindParams($params, $stmt);
+        $stmt->execute();
         if (!$isWrite) {
             if (is_null($emptyBean)) {
                 return $stmt->fetchAsCollection();
@@ -197,63 +145,83 @@ class EasySQL
             }
         } else {
             $stmt->afterQuery();
+            return null;
         }
-	}//runQuery
-
-	public function getAsArray($query, $params = null)
-	{
-		return $this->runQuery($query, $params);
-	}//getAsArray
-
-	/**
-	 * @param IEasySQLBean $emptyBean
-	 * @param string $query
-	 * @param array|null $params
-	 * @return IEasySQLBean[]|\object[]
-	 */
-	public function getAsCollectionOf(IEasySQLBean $emptyBean, $query, $params = null)
-	{
-		return $this->runQuery($query, $params, $emptyBean);
-	}//getAsCollectionOf
-
-	public function write($query, $params = null)
-	{
-		$this->runQuery($query, $params, null, true);
-	}//write
-
-    public function insertSingleBean(IEasySQLBean $bean, $tableName = null)
-    {
-        list($props, $insertQuery) = $this->beanQuery->getInsertQueryAndPropsForBeanTable($bean, $tableName);
-        $this->runQuery($insertQuery, $props, null, true);
-    }//insertSingleBean
+    }//getContext
 
     /**
-     * @param IEasySQLBean[] $beanArray
-     * @param string $tableName
+     * @param string $query
+     * @return IEasySQLDB
      */
-    public function insertCollectionOfBeans($beanArray, $tableName = null)
+    protected function getQueryConnection($query)
     {
-        list($values, $q) = $this->beanQuery->getInsertQueryAndPropsForBeanArrayAndTable($beanArray, $tableName);
-        $this->runQuery($q, $values, null, true);
-    }//insertCollectionOfBeans
+        return $this->getConnection($this->getApplicationName(), $this->qAnalyzer->getDbType($query));
+    }//isTestMode
 
-	/**
-	 * @param array $params
-	 * @param IEasySQLDBStatement $stmt
-	 */
-	private function bindParams($params, IEasySQLDBStatement $stmt)
-	{
-		if (!is_null($params)) {
-			if (isset($params[0])) {
+    /**
+     * @param $db
+     * @param $type
+     * @return IEasySQLDB
+     */
+    private function getConnection($db, $type)
+    {
+        $this->manager = $this->getNewEasySQLConnectionManager();
+        if (!$this->manager->isConfigured($this->config)) {
+            $this->manager->setNewConfig($this->config);
+        }
+        return $this->manager->getDbConnection($db, $type);
+    }//setTestMode
+
+    /**
+     * @return IEasySQLConnectionManager
+     */
+    protected function getNewEasySQLConnectionManager()
+    {
+        return new EasySQLConnectionManager($this->getContext(), $this->isTestMode());
+    }//getNewConnection
+
+    /**
+     * @return EasySQLContext
+     */
+    private function getContext()
+    {
+        return $this->context;
+    }//getQueryConnection
+
+    /**
+     * Override this method for mock DAOs
+     * @return bool
+     */
+    public function isTestMode()
+    {
+        return $this->isTestMode;
+    }//runQuery
+
+    /**
+     * @return string
+     */
+    protected function getApplicationName()
+    {
+        return $this->appName;
+    }//getAsArray
+
+    /**
+     * @param array $params
+     * @param IEasySQLDBStatement $stmt
+     */
+    private function bindParams($params, IEasySQLDBStatement $stmt)
+    {
+        if (!is_null($params)) {
+            if (isset($params[0])) {
                 $this->bindIndexedParameters($params, $stmt);
-			}//if bindParams are just a list of namedValuePairs
-			else {
-				foreach ($params as $key => $value) {
+            }//if bindParams are just a list of namedValuePairs
+            else {
+                foreach ($params as $key => $value) {
                     $this->bindNamedParameters($stmt, $value, $key);
                 }//loop thru each param to bind
-			}//parameters are named key/value pairs
-		}//if bindParams were set with the query
-	}//bindParams
+            }//parameters are named key/value pairs
+        }//if bindParams were set with the query
+    }//getAsCollectionOf
 
     /**
      * @param $params
@@ -268,7 +236,7 @@ class EasySQL
                 $stmt->bindValueByIndex(($index + 1), self::NULL_STRING);
             }
         }//loop thru each param to bind
-    }//bindIndexedParameters
+    }//write
 
     /**
      * @param IEasySQLDBStatement $stmt
@@ -282,5 +250,37 @@ class EasySQL
         } else {
             $stmt->bindValueByName($key, self::NULL_STRING);
         }
+    }//insertSingleBean
+
+    /**
+     * @param IEasySQLBean $emptyBean
+     * @param string $query
+     * @param array|null $params
+     * @return IEasySQLBean[]|\object[]
+     */
+    public function getAsCollectionOf(IEasySQLBean $emptyBean, $query, $params = null)
+    {
+        return $this->runQuery($query, $params, $emptyBean);
+    }//insertCollectionOfBeans
+
+    public function write($query, $params = null)
+    {
+        $this->runQuery($query, $params, null, true);
+    }//bindParams
+
+    public function insertSingleBean(IEasySQLBean $bean, $tableName = null)
+    {
+        list($props, $insertQuery) = $this->beanQuery->getInsertQueryAndPropsForBeanTable($bean, $tableName);
+        $this->runQuery($insertQuery, $props, null, true);
+    }//bindIndexedParameters
+
+    /**
+     * @param IEasySQLBean[] $beanArray
+     * @param string $tableName
+     */
+    public function insertCollectionOfBeans($beanArray, $tableName = null)
+    {
+        list($values, $q) = $this->beanQuery->getInsertQueryAndPropsForBeanArrayAndTable($beanArray, $tableName);
+        $this->runQuery($q, $values, null, true);
     }//bindNamedParameters
 }//EasySQL
