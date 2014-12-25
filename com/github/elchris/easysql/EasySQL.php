@@ -15,7 +15,7 @@ namespace com\github\elchris\easysql;
  *
  * a) Performance
  * b) Security
- * c) Working with Entities
+ * c) Working with Entities, henceforth referred to as "Beans"
  *
  * And more specifically:
  *
@@ -29,7 +29,7 @@ namespace com\github\elchris\easysql;
  * 4) b) Data-sets retrieved as untyped associative arrays add overhead to application development
  * 4) c) Efficient insert statements of multiple rows are often hard to achieve
  *
- * This library gives you transparent support for Master / Slave connections
+ * This library gives you transparent support for Master / Slave connection dispatching
  * while promoting more secure queries with Prepared Statements as well as the
  * reuse of prepared statements and an existing connection within an execution context.
  *
@@ -224,7 +224,7 @@ class EasySQL
     }//getAsCollectionOf
 
     /**
-     * @param $params
+     * @param array $params
      * @param IEasySQLDBStatement $stmt
      */
     private function bindIndexedParameters($params, IEasySQLDBStatement $stmt)
@@ -263,11 +263,19 @@ class EasySQL
         return $this->runQuery($query, $params, $emptyBean);
     }//insertCollectionOfBeans
 
+    /**
+     * @param string $query
+     * @param array $params
+     */
     public function write($query, $params = null)
     {
         $this->runQuery($query, $params, null, true);
     }//bindParams
 
+    /**
+     * @param IEasySQLBean $bean
+     * @param string $tableName
+     */
     public function insertSingleBean(IEasySQLBean $bean, $tableName = null)
     {
         list($props, $insertQuery) = $this->beanQuery->getInsertQueryAndPropsForBeanTable($bean, $tableName);
