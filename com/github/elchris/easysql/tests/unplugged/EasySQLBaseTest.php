@@ -191,7 +191,7 @@ class EasySQLBaseTest extends EasySQLUnitTest
      */
     private function getReadQuery()
     {
-        return EasySQLQueryAnalyzer::SELECT . ' * from blah where huh=2';
+        return EasySQLQueryAnalyzer::SELECT . ' * FROM blah WHERE huh=2';
     }//testUnconfiguredNameThrowsException
 
     /**
@@ -238,7 +238,7 @@ class EasySQLBaseTest extends EasySQLUnitTest
      */
     private function getInsertQuery()
     {
-        return EasySQLQueryAnalyzer::INSERT . ' * from blah where huh=2';
+        return EasySQLQueryAnalyzer::INSERT . ' * FROM blah WHERE huh=2';
     }//testReadQueryConnectionReuse
 
     public function testDeleteIsMaster()
@@ -253,7 +253,7 @@ class EasySQLBaseTest extends EasySQLUnitTest
      */
     private function getDeleteQuery()
     {
-        return EasySQLQueryAnalyzer::DELETE . ' * from blah where huh=2';
+        return EasySQLQueryAnalyzer::DELETE . ' * FROM blah WHERE huh=2';
     }//testReadWriteConnectionsAreDifferent
 
     public function testCallIsMaster()
@@ -286,7 +286,7 @@ class EasySQLBaseTest extends EasySQLUnitTest
      */
     private function getReadQueryTwo()
     {
-        return EasySQLQueryAnalyzer::SELECT . ' * from blah where huh=1';
+        return EasySQLQueryAnalyzer::SELECT . ' * FROM blah WHERE huh=1';
     }//testWriteSomething
 
     public function testWriteQueryConnectionReuse()

@@ -49,13 +49,13 @@ class EasySQLBeanQuery
             }//loop thru properties, add its value to values
         }//loop thru passed beans
 
-        $q = 'insert into'
+        $q = 'INSERT INTO'
             . $table
             . ' ('
             . implode(
                 ',', $columnsArray
             )
-            . ') values '
+            . ') VALUES '
             . implode(
                 ',', $valuesInsertArray
             )
@@ -113,8 +113,8 @@ class EasySQLBeanQuery
     {
         $columns = implode(', ', array_keys($props));
         $values = ':' . implode(', :', array_keys($props));
-        $q = 'insert into'
-            . $table . ' (' . $columns . ') values (' . $values . ');';
+        $q = 'INSERT INTO'
+            . $table . ' (' . $columns . ') VALUES (' . $values . ');';
         return $q;
     }//getInsertQueryForPropsAndTable
 }//EasySQLBeanQuery

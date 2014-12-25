@@ -104,7 +104,7 @@ class EasySQL
     protected function getNewEasySQLBeanQuery()
     {
         return new EasySQLBeanQuery();
-    }//getNewEasySQLConnectionManager
+    }//getNewEasySQLBeanQuery
 
     /**
      * @return EasySQLQueryAnalyzer
@@ -112,17 +112,7 @@ class EasySQL
     protected function getNewEasySQLQueryAnalyzer()
     {
         return new EasySQLQueryAnalyzer();
-    }//getNewEasySQLBeanQuery
-
-    public function setTestMode()
-    {
-        $this->isTestMode = true;
     }//getNewEasySQLQueryAnalyzer
-
-    public function getAsArray($query, $params = null)
-    {
-        return $this->runQuery($query, $params);
-    }//getApplicationName
 
     /**
      * @param string $query
@@ -147,7 +137,7 @@ class EasySQL
             $stmt->afterQuery();
             return null;
         }
-    }//getContext
+    }//runQuery
 
     /**
      * @param string $query
@@ -156,7 +146,7 @@ class EasySQL
     protected function getQueryConnection($query)
     {
         return $this->getConnection($this->getApplicationName(), $this->qAnalyzer->getDbType($query));
-    }//isTestMode
+    }//getQueryConnection
 
     /**
      * @param $db
@@ -170,7 +160,7 @@ class EasySQL
             $this->manager->setNewConfig($this->config);
         }
         return $this->manager->getDbConnection($db, $type);
-    }//setTestMode
+    }//getConnection
 
     /**
      * @return IEasySQLConnectionManager
@@ -178,7 +168,7 @@ class EasySQL
     protected function getNewEasySQLConnectionManager()
     {
         return new EasySQLConnectionManager($this->getContext(), $this->isTestMode());
-    }//getNewConnection
+    }//getNewEasySQLConnectionManager
 
     /**
      * @return EasySQLContext
@@ -186,16 +176,7 @@ class EasySQL
     private function getContext()
     {
         return $this->context;
-    }//getQueryConnection
-
-    /**
-     * Override this method for mock DAOs
-     * @return bool
-     */
-    public function isTestMode()
-    {
-        return $this->isTestMode;
-    }//runQuery
+    }//getContext
 
     /**
      * @return string
@@ -203,7 +184,7 @@ class EasySQL
     protected function getApplicationName()
     {
         return $this->appName;
-    }//getAsArray
+    }//getApplicationName
 
     /**
      * @param array $params
@@ -221,7 +202,7 @@ class EasySQL
                 }//loop thru each param to bind
             }//parameters are named key/value pairs
         }//if bindParams were set with the query
-    }//getAsCollectionOf
+    }//bindParams
 
     /**
      * @param array $params
@@ -236,7 +217,7 @@ class EasySQL
                 $stmt->bindValueByIndex(($index + 1), self::NULL_STRING);
             }
         }//loop thru each param to bind
-    }//write
+    }//bindIndexedParameters
 
     /**
      * @param IEasySQLDBStatement $stmt
@@ -250,7 +231,26 @@ class EasySQL
         } else {
             $stmt->bindValueByName($key, self::NULL_STRING);
         }
-    }//insertSingleBean
+    }//bindNamedParameters
+
+    /**
+     * Override this method for mock DAOs
+     * @return bool
+     */
+    public function isTestMode()
+    {
+        return $this->isTestMode;
+    }//isTestMode
+
+    public function setTestMode()
+    {
+        $this->isTestMode = true;
+    }//getNewEasySQLQueryAnalyzer
+
+    public function getAsArray($query, $params = null)
+    {
+        return $this->runQuery($query, $params);
+    }//getApplicationName
 
     /**
      * @param IEasySQLBean $emptyBean
