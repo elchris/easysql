@@ -160,7 +160,7 @@ class TestDAO extends EasySQL
 
 /**
  * Class EasySQLTest
- * @package com\github\elchris
+ * @package com\github\elchris\easysql
  */
 class EasySQLBaseTest extends EasySQLUnitTest
 {

@@ -13,7 +13,7 @@ namespace com\github\elchris\easysql;
  * Marker interface for now
  *
  * Interface IEasySQLBean
- * @package com\github\elchris
+ * @package com\github\elchris\easysql
  */
 interface IEasySQLBean
 {

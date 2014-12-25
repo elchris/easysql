@@ -63,7 +63,7 @@ namespace com\github\elchris\easysql;
  *
  *
  * Class EasySQL
- * @package com\github\elchris
+ * @package com\github\elchris\easysql
  */
 class EasySQL
 {
@@ -97,6 +97,70 @@ class EasySQL
         $this->beanQuery = $this->getNewEasySQLBeanQuery();
         $this->qAnalyzer = $this->getNewEasySQLQueryAnalyzer();
     }//EasySQL Constructor
+
+    /**
+     * Override this method for mock DAOs
+     * @return bool
+     */
+    public function isTestMode()
+    {
+        return $this->isTestMode;
+    }//isTestMode
+
+    public function setTestMode()
+    {
+        $this->isTestMode = true;
+    }//setTestMode
+
+    /**
+     * @param string $query
+     * @param array $params
+     * @return IEasySQLBean[]|\object[]
+     */
+    public function getAsArray($query, $params = null)
+    {
+        return $this->runQuery($query, $params);
+    }//getAsArray
+
+    /**
+     * @param IEasySQLBean $emptyBean
+     * @param string $query
+     * @param array|null $params
+     * @return IEasySQLBean[]
+     */
+    public function getAsCollectionOf(IEasySQLBean $emptyBean, $query, $params = null)
+    {
+        return $this->runQuery($query, $params, $emptyBean);
+    }//getAsCollectionOf
+
+    /**
+     * @param string $query
+     * @param array $params
+     */
+    public function write($query, $params = null)
+    {
+        $this->runQuery($query, $params, null, true);
+    }//write
+
+    /**
+     * @param IEasySQLBean $bean
+     * @param string $tableName
+     */
+    public function insertSingleBean(IEasySQLBean $bean, $tableName = null)
+    {
+        list($props, $insertQuery) = $this->beanQuery->getInsertQueryAndPropsForBeanTable($bean, $tableName);
+        $this->runQuery($insertQuery, $props, null, true);
+    }//insertSingleBean
+
+    /**
+     * @param IEasySQLBean[] $beanArray
+     * @param string $tableName
+     */
+    public function insertCollectionOfBeans($beanArray, $tableName = null)
+    {
+        list($values, $q) = $this->beanQuery->getInsertQueryAndPropsForBeanArrayAndTable($beanArray, $tableName);
+        $this->runQuery($q, $values, null, true);
+    }//insertCollectionOfBeans
 
     /**
      * @return EasySQLBeanQuery
@@ -231,64 +295,5 @@ class EasySQL
         } else {
             $stmt->bindValueByName($key, self::NULL_STRING);
         }
-    }//bindNamedParameters
-
-    /**
-     * Override this method for mock DAOs
-     * @return bool
-     */
-    public function isTestMode()
-    {
-        return $this->isTestMode;
-    }//isTestMode
-
-    public function setTestMode()
-    {
-        $this->isTestMode = true;
-    }//getNewEasySQLQueryAnalyzer
-
-    public function getAsArray($query, $params = null)
-    {
-        return $this->runQuery($query, $params);
-    }//getApplicationName
-
-    /**
-     * @param IEasySQLBean $emptyBean
-     * @param string $query
-     * @param array|null $params
-     * @return IEasySQLBean[]|\object[]
-     */
-    public function getAsCollectionOf(IEasySQLBean $emptyBean, $query, $params = null)
-    {
-        return $this->runQuery($query, $params, $emptyBean);
-    }//insertCollectionOfBeans
-
-    /**
-     * @param string $query
-     * @param array $params
-     */
-    public function write($query, $params = null)
-    {
-        $this->runQuery($query, $params, null, true);
-    }//bindParams
-
-    /**
-     * @param IEasySQLBean $bean
-     * @param string $tableName
-     */
-    public function insertSingleBean(IEasySQLBean $bean, $tableName = null)
-    {
-        list($props, $insertQuery) = $this->beanQuery->getInsertQueryAndPropsForBeanTable($bean, $tableName);
-        $this->runQuery($insertQuery, $props, null, true);
-    }//bindIndexedParameters
-
-    /**
-     * @param IEasySQLBean[] $beanArray
-     * @param string $tableName
-     */
-    public function insertCollectionOfBeans($beanArray, $tableName = null)
-    {
-        list($values, $q) = $this->beanQuery->getInsertQueryAndPropsForBeanArrayAndTable($beanArray, $tableName);
-        $this->runQuery($q, $values, null, true);
     }//bindNamedParameters
 }//EasySQL
