@@ -14,13 +14,13 @@ use com\github\elchris\easysql\tests\EasySQLUnitTest;
 
 class MyApp extends ExampleBaseModel
 {
-        private $arrayMode = false;//insertLotsOfCities
+    private $arrayMode = false;
 
     public function __construct(EasySQLContext $ctx, $isArrayMode = false)
     {
         $this->arrayMode = $isArrayMode;
         parent::__construct($ctx);
-    }//getCitiesByCountryCode
+    }//MyApp Constructor
 
     public function insertLotsOfCities($number, $oneByOne = false)
     {
@@ -43,7 +43,7 @@ class MyApp extends ExampleBaseModel
         if (!$oneByOne) {
             $this->db()->insertCollectionOfBeans($cities, 'City');
         }
-    }//getCountriesByContinent
+    }//insertLotsOfCities
 
     /**
      * @param $countryCode
@@ -65,7 +65,7 @@ class MyApp extends ExampleBaseModel
                     array($countryCode)
                 );
         }
-    }//getCityById
+    }//getCitiesByCountryCode
 
     /**
      * @param string $continent
@@ -94,7 +94,7 @@ class MyApp extends ExampleBaseModel
                     new Country(), $q, $args
                 );
         }
-    }//getCountryByCode
+    }//getCountriesByContinent
 
     /**
      * @param int $id
@@ -116,15 +116,15 @@ class MyApp extends ExampleBaseModel
                     array($id)
                 );
         }
-    }//prepFakeCountry
+    }//getCityById
 
-public function prepFakeCountry()
+    public function prepFakeCountry()
     {
         $fakeCountry = $this->getCountryByCode('FKE');
         if (is_null($fakeCountry)) {
             $this->db()->write(self::FAKE_COUNTRY);
         }
-    }
+    }//prepFakeCountry
 
     /**
      * @param string $code country code, likely FKE
@@ -139,7 +139,7 @@ public function prepFakeCountry()
         } else {
             return null;
         }
-    }//MyApp Constructor
+    }//getCountryByCode
 }//MyApp
 
 class ConnectedApplicationTest extends EasySQLUnitTest
@@ -221,7 +221,7 @@ class ConnectedApplicationTest extends EasySQLUnitTest
             $cities = $a->getCitiesByCountryCode('FKE');
             $this->assertCount(0, $cities);
         }
-    }//testSpeedOfInserts
+    }//verifyCityCountAndReset
 
     public function testSpeedOfInserts()
     {
@@ -244,5 +244,5 @@ class ConnectedApplicationTest extends EasySQLUnitTest
         $timingTwo = ($end - $start);
         $this->debug('timing 2: ' . $timingTwo);
         $this->debug('ratio ' . $timingOne / $timingTwo);
-    }//testAccuracyOfCityInserts
+    }//testSpeedOfInserts
 }//ConnectedApplicationTest
