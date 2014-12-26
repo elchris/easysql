@@ -34,7 +34,7 @@ VALUES ('FKE', 'Fakeland', 'Asia', 'South America', 1234.00, 1900, 1232345, 90.0
     public function db()
     {
         return new EasySQL($this->context, self::APP_WORLD, self::getConfig());
-    }//MyApp Constructor
+    }//db
 
     private static function getConfig()
     {
@@ -45,5 +45,5 @@ VALUES ('FKE', 'Fakeland', 'Asia', 'South America', 1234.00, 1900, 1232345, 90.0
             self::$config = $fig;
         }
         return self::$config;
-    }//db
+    }//getConfig
 }//ExampleBaseModel
