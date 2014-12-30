@@ -11,6 +11,9 @@ namespace com\github\elchris\easysql\tests\integration;
 use com\github\elchris\easysql\EasySQLContext;
 use com\github\elchris\easysql\tests\EasySQLUnitTest;
 
+/**
+ * @see ExampleBaseModel for simple configuration and bootsrapping.
+ */
 class WorldModel extends ExampleBaseModel
 {
     /**
