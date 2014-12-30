@@ -12,7 +12,7 @@ use com\github\elchris\easysql\EasySQLContext;
 use com\github\elchris\easysql\tests\EasySQLUnitTest;
 
 /**
- * @see ExampleBaseModel for simple configuration and bootsrapping.
+ * @see ExampleBaseModel for simple EasySQL configuration and bootsrapping.
  */
 class WorldModel extends ExampleBaseModel
 {
