@@ -22,6 +22,11 @@ class MyApp extends ExampleBaseModel
         parent::__construct($ctx);
     }//MyApp Constructor
 
+    public function doBrokenQuery()
+    {
+        $this->db()->write('select * from Bleh;');
+    }//doBrokenQuery
+
     public function insertLotsOfCities($number, $oneByOne = false)
     {
         $cityIndex = time();
@@ -245,4 +250,13 @@ class ConnectedApplicationTest extends EasySQLUnitTest
         $this->debug('timing 2: ' . $timingTwo);
         $this->debug('ratio ' . $timingOne / $timingTwo);
     }//testSpeedOfInserts
+
+    /**
+     * @expectedException Exception
+     */
+    public function testBrokenQuery()
+    {
+        $a = new MyApp(new EasySQLContext());
+        $a->doBrokenQuery();
+    }
 }//ConnectedApplicationTest
