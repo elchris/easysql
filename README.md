@@ -7,6 +7,8 @@ Work more optimally with SQL for Performance, Security and Readability:
 * Transparent dispatching of queries to Master or Slave connection
 * Strongly-typed INSERT Inputs and SELECT Outputs using Entity Beans
 * Built TDD in PhpStorm with SOLID principles, 100% code coverage thru Unit and Integration Tests
+* PSR-2 coding style
+* PSR-4 auto-loading
 
 Sample Usage:
 =============
