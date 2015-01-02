@@ -93,6 +93,7 @@ class EasySQLConfigApplication
 class EasySQLConfig
 {
     const DRIVER_MYSQL = 'mysql';
+    const DRIVER_POSTGRES = 'pgsql';
     const KEY_CONNECTION = 'connection';
 
     /**
