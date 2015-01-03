@@ -11,7 +11,6 @@ namespace com\github\elchris\easysql;
 use Exception;
 use PDO;
 
-
 class EasySQLDB implements IEasySQLDB
 {
     private static $connectionCounter = 0;
