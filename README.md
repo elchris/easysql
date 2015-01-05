@@ -17,11 +17,11 @@ Composer Install:
 
 https://packagist.org/packages/easysql/easysql
 
-{
-    "require": {
-        "easysql/easysql": "dev-master"
+    {
+        "require": {
+            "easysql/easysql": "dev-master"
+        }
     }
-}
 
 Sample Usage:
 =============
