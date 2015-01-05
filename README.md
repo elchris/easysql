@@ -12,6 +12,9 @@ Work more optimally with SQL for Performance, Security and Readability:
 * Composer Installation
 * [Semantic Versioning](http://semver.org) will be followed
 
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/elchris/easysql/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/elchris/easysql/?branch=master)
+[![Build Status](https://scrutinizer-ci.com/g/elchris/easysql/badges/build.png?b=master)](https://scrutinizer-ci.com/g/elchris/easysql/build-status/master)
+
 More Precisely
 ==============
 
