@@ -16,6 +16,9 @@ use com\github\elchris\easysql\tests\EasySQLUnitTest;
  */
 class WorldModel extends ExampleBaseModel
 {
+    const FAKE_COUNTRY = "INSERT INTO `Country` (`Code`, `Name`, `Continent`, `Region`, `SurfaceArea`, `IndepYear`, `Population`, `LifeExpectancy`, `GNP`, `GNPOld`, `LocalName`, `GovernmentForm`, `HeadOfState`, `Capital`, `Code2`)
+VALUES ('FKE', 'Fakeland', 'Asia', 'South America', 1234.00, 1900, 1232345, 90.0, 12345.00, 12345.00, 'Fakeworld', 'Fakerepublic', 'Eric Cartman', 537, '');";
+
     /**
      * @param $countryCode
      * @return City[]
