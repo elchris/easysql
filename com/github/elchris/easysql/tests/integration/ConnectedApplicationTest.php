@@ -127,7 +127,7 @@ class MyApp extends ExampleBaseModel
     {
         $fakeCountry = $this->getCountryByCode('FKE');
         if (is_null($fakeCountry)) {
-            $this->db()->write(self::FAKE_COUNTRY);
+            $this->db()->write(WorldModel::FAKE_COUNTRY);
         }
     }//prepFakeCountry
 
