@@ -10,7 +10,7 @@ Work more optimally with SQL for Performance, Security and Readability:
 * PSR-2 coding style
 * PSR-4 auto-loading
 * Composer Installation
-* Semantic Versioning will be followed: http://semver.org
+* [Semantic Versioning](http://semver.org) will be followed
 
 Composer Install:
 ======================
@@ -25,7 +25,9 @@ https://packagist.org/packages/easysql/easysql
 
 Sample Usage:
 =============
-https://github.com/elchris/easysql/blob/master/com/github/elchris/easysql/tests/integration/ExampleApplicationTest.php
+* [Example "BaseModel" Class](https://github.com/elchris/easysql/blob/master/com/github/elchris/easysql/tests/integration/ExampleBaseModel.php)
+* [Example "Model" Class]
+(https://github.com/elchris/easysql/blob/master/com/github/elchris/easysql/tests/integration/ExampleApplicationTest.php)
 
 Purpose:
 ========
