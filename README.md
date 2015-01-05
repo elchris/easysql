@@ -9,6 +9,19 @@ Work more optimally with SQL for Performance, Security and Readability:
 * Built TDD in PhpStorm with SOLID principles, 100% code coverage thru Unit and Integration Tests
 * PSR-2 coding style
 * PSR-4 auto-loading
+* Composer Installation
+* Semantic Versioning will be followed: http://semver.org
+
+Composer Install:
+======================
+
+https://packagist.org/packages/easysql/easysql
+
+{
+    "require": {
+        "easysql/easysql": "~0.0"
+    }
+}
 
 Sample Usage:
 =============
