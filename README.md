@@ -39,7 +39,7 @@ https://packagist.org/packages/easysql/easysql
 Sample Usage:
 =============
 * [Example "BaseModel" Class](https://github.com/elchris/easysql/blob/master/com/github/elchris/easysql/tests/integration/ExampleBaseModel.php)
-* [Example "Model" Class]
+* [Example "WorldModel" Class]
 (https://github.com/elchris/easysql/blob/master/com/github/elchris/easysql/tests/integration/ExampleApplicationTest.php)
 
 Purpose:
