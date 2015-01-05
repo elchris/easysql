@@ -19,7 +19,7 @@ https://packagist.org/packages/easysql/easysql
 
 {
     "require": {
-        "easysql/easysql": "~0.0"
+        "easysql/easysql": "dev-master"
     }
 }
 
