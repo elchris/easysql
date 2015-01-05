@@ -252,7 +252,7 @@ class ConnectedApplicationTest extends EasySQLUnitTest
     }//testSpeedOfInserts
 
     /**
-     * @expectedException Exception
+     * @expectedException \Exception
      */
     public function testBrokenQuery()
     {

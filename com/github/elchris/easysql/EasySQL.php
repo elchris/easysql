@@ -116,6 +116,7 @@ class EasySQL
      * @param string $query
      * @param array $params
      * @return IEasySQLBean[]|\object[]
+     * @throws \Exception
      */
     public function getAsArray($query, $params = null)
     {
@@ -127,6 +128,7 @@ class EasySQL
      * @param string $query
      * @param array|null $params
      * @return IEasySQLBean[]
+     * @throws \Exception
      */
     public function getAsCollectionOf(IEasySQLBean $emptyBean, $query, $params = null)
     {
@@ -136,6 +138,7 @@ class EasySQL
     /**
      * @param string $query
      * @param array $params
+     * @throws \Exception
      */
     public function write($query, $params = null)
     {
@@ -145,6 +148,7 @@ class EasySQL
     /**
      * @param IEasySQLBean $bean
      * @param string $tableName
+     * @throws \Exception
      */
     public function insertSingleBean(IEasySQLBean $bean, $tableName = null)
     {
@@ -155,6 +159,7 @@ class EasySQL
     /**
      * @param IEasySQLBean[] $beanArray
      * @param string $tableName
+     * @throws \Exception
      */
     public function insertCollectionOfBeans($beanArray, $tableName = null)
     {
