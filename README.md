@@ -1,4 +1,4 @@
-easysql
+EasySQL
 =======
 
 Work more optimally with SQL for Performance, Security and Readability:
@@ -11,6 +11,16 @@ Work more optimally with SQL for Performance, Security and Readability:
 * PSR-4 auto-loading
 * Composer Installation
 * [Semantic Versioning](http://semver.org) will be followed
+
+More Precisely
+==============
+
+* This is not an ORM library. It assumes you'll be writing your own SQL queries.
+* By leveraging "Entity Beans" for INSERT and SELECT operations, spend less time juggling untyped associative arrays.
+* EasySQLConfig allows you to:
+* * Define your PDO-supported driver, EasySQL::DRIVER_POSTGRES or EasySQL::DRIVER_MYSQL
+* * Define multiple applications
+* * Define a Master and a Slave connection for each application
 
 Composer Install:
 ======================
