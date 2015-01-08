@@ -11,20 +11,84 @@ namespace com\github\elchris\easysql;
 
 class EasySQLContext
 {
-    /**
-     * @var IEasySQLDB[] $connections
-     */
+
     private $connections = array();
     private $initialized = false;
 
     /**
-     * @return IEasySQLDB[]
+     * @return array
      */
     public function getConnections()
     {
         return $this->connections;
     }//getConnections
 
+    /**
+     * @return IEasySQLDB[]
+     */
+    public function releaseAndGetActiveStashedConnections()
+    {
+        /**
+         * @var IEasySQLDB[] $allConnections;
+         */
+        $allConnections = array();
+        foreach($this->connections as $appName => $appConnections) {
+            $this->releaseAndGetStashedConnectionIfActive(
+               $appConnections[EasySQLQueryAnalyzer::CONNECTION_MASTER],
+               $allConnections
+            );
+            $this->releaseAndGetStashedConnectionIfActive(
+                $appConnections[EasySQLQueryAnalyzer::CONNECTION_SLAVE],
+                $allConnections
+            );
+        }
+        return $allConnections;
+    }//releaseAndGetActiveStashedConnections
+
+    private function releaseAndGetStashedConnectionIfActive(&$connectionSpec, &$releasedConnections)
+    {
+        /**
+         * @var IEasySQLDB $connection
+         */
+        $connection = null;
+        if ($this->isConnectionActive($connectionSpec)) {
+            $connection = $connectionSpec[EasySQLConnectionManager::KEY_CONNECTION];
+            $connection->releaseResources();
+            unset($connectionSpec[EasySQLConnectionManager::KEY_CONNECTION]);
+            array_push($releasedConnections, $connection);
+        }
+    }//releaseAndGetStashedConnectionIfActive
+
+    private function isConnectionActive(&$connectionSpec)
+    {
+        return
+            isset($connectionSpec[EasySQLConnectionManager::KEY_CONNECTION])
+            &&
+            !is_null($connectionSpec[EasySQLConnectionManager::KEY_CONNECTION])
+            &&
+            $connectionSpec[EasySQLConnectionManager::KEY_CONNECTION] instanceof IEasySQLDB
+            ;
+    }
+
+    /**
+     * @param string $appName
+     * @param string $connectionType
+     * @return IEasySQLDB
+     */
+    public function getConnectionForAppType($appName, $connectionType)
+    {
+        if (isset($this->connections[$appName][$connectionType][EasySQLConnectionManager::KEY_CONNECTION])) {
+            return $this->connections[$appName][$connectionType][EasySQLConnectionManager::KEY_CONNECTION];
+        } else {
+            return null;
+        }
+    }//getConnectionForAppType
+
+    /**
+     * @param string $appName
+     * @param string $connectionType
+     * @param IEasySQLDB $connection
+     */
     public function setConnection($appName, $connectionType, IEasySQLDB $connection)
     {
         $this->connections[$appName][$connectionType][EasySQLConnectionManager::KEY_CONNECTION] = $connection;

@@ -185,12 +185,12 @@ class EasySQL
 
     /**
      * @param string $query
-     * @param array|null $params
+     * @param array $params
      * @param IEasySQLBean|null $emptyBean
      * @param bool $isWrite is query a write query
      * @return IEasySQLBean[]|\object[]
      */
-    private function runQuery($query, $params = null, $emptyBean = null, $isWrite = false)
+    private function runQuery($query, $params, $emptyBean = null, $isWrite = false)
     {
         $connection = $this->getQueryConnection($query);
         $stmt = $connection->prepareQuery($query);
