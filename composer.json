@@ -2,7 +2,7 @@
     "name": "easysql/easysql",
     "type": "library",
     "description": "Work more optimally with SQL for Performance, Security and Readability",
-    "keywords": ["sql","mysql","postgres","pdo","prepared statements"],
+    "keywords": ["sql","mysql","postgres","pdo","prepared statements", "Uncle Bob", "TDD", "SOLID", "PSR-2", "PSR-4"],
     "homepage": "https://github.com/elchris/easysql",
     "license": "MIT",
     "authors": [
