@@ -46,6 +46,12 @@ class EasySQLConnectionManager implements IEasySQLConnectionManager
         self::$config = $config;
     }//setConfig
 
+    /**
+     * @param string $applicationName
+     * @param string $type
+     * @return IEasySQLDB
+     * @throws Exception
+     */
     public function getDbConnection($applicationName, $type)
     {
         $this->init();
@@ -83,6 +89,10 @@ class EasySQLConnectionManager implements IEasySQLConnectionManager
         return is_null($this->context->getConnections()) || (count($this->context->getConnections()) === 0);
     }//connectionsNotInitialized
 
+    /**
+     * @return EasySQLConfig
+     * @throws Exception
+     */
     public function getCurrentConfig()
     {
         if (!$this->isConfigured()) {
@@ -91,6 +101,10 @@ class EasySQLConnectionManager implements IEasySQLConnectionManager
         return self::$config;
     }//getCurrentConfig
 
+    /**
+     * @param EasySQLConfig $referenceConfig
+     * @return bool
+     */
     public function isConfigured(EasySQLConfig $referenceConfig = null)
     {
         $referenceMismatch = false;
@@ -102,6 +116,7 @@ class EasySQLConnectionManager implements IEasySQLConnectionManager
 
     /**
      * @param string $applicationName
+     * @throws Exception
      */
     private function checkForValidApplicationName($applicationName)
     {
@@ -113,6 +128,7 @@ class EasySQLConnectionManager implements IEasySQLConnectionManager
     /**
      * @param string $applicationName
      * @param string $type
+     * @throws Exception
      */
     private function checkForValidConnectionType($applicationName, $type)
     {
@@ -151,14 +167,14 @@ class EasySQLConnectionManager implements IEasySQLConnectionManager
     }//getNewConnectionForApplicationAndType
 
     /**
-     * @param $string
-     * @param $u
-     * @param $p
+     * @param string $connectionString
+     * @param string $u
+     * @param string $p
      * @return IEasySQLDB
      */
-    private function getNewConnection($string, $u, $p)
+    protected function getNewConnection($connectionString, $u, $p)
     {
-        return new EasySQLDB($string, $u, $p, $this->mocked);
+        return new EasySQLDB($connectionString, $u, $p, $this->mocked);
     }//getNewConnection
 
     /**

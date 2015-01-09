@@ -31,7 +31,7 @@ class EasySQLDB implements IEasySQLDB
      */
     private $preparedStatementStash = array();
 
-/**
+    /**
      * @param string $connectionString
      * @param string $u
      * @param string $p
@@ -100,7 +100,7 @@ class EasySQLDB implements IEasySQLDB
         return $this->preparedStatementStash[$queryString];
     }//prepareQuery
 
-/**
+    /**
      * @param $queryString
      */
     private function stashNewStatement($queryString)
@@ -122,7 +122,7 @@ class EasySQLDB implements IEasySQLDB
         return $this->connectionId;
     }
 
-        /**
+    /**
      * @return IEasySQLDBStatement[]
      */
     public function releaseResources()
