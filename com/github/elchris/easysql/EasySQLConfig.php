@@ -8,7 +8,7 @@
 
 namespace com\github\elchris\easysql;
 
-use SebastianBergmann\Exporter\Exception;
+use \Exception;
 
 class EasySQLConfigApplication
 {

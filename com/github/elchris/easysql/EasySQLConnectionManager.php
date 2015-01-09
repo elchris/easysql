@@ -2,7 +2,7 @@
 
 namespace com\github\elchris\easysql;
 
-use SebastianBergmann\Exporter\Exception;
+use \Exception;
 
 class EasySQLConnectionManager implements IEasySQLConnectionManager
 {
