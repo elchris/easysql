@@ -43,7 +43,7 @@ Sample Usage:
 * [Example "WorldModel" Class]
 (https://github.com/elchris/easysql/blob/master/com/github/elchris/easysql/tests/integration/ExampleApplicationTest.php)
 
-Purpose:
+[Purpose](https://github.com/elchris/easysql/blob/master/com/github/elchris/easysql/EasySQL.php#L13):
 ========
-https://github.com/elchris/easysql/blob/master/com/github/elchris/easysql/EasySQL.php#L13
+
 
