@@ -1,7 +1,7 @@
 EasySQL
 =======
 
-Work more optimally with SQL for Performance, Security and Readability:
+Work more effectively with SQL for Performance, Security and Readability:
 
 * Optimal management of PDO Connections and Prepared Statements across an execution context
    * Reusable connections are managed via a shared "Execution Context", allowing you to use and reuse as many "Model" Class instances as convenient without constantly opening-up and tearing-down connections.
