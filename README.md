@@ -8,15 +8,19 @@ Work more optimally with SQL for Performance, Security and Readability:
    * Each connection keeps track of "Prepared Statements" tied to each "Query String"
 * Transparent dispatching of queries to Master or Slave connection
 * Strongly-typed INSERT Inputs and SELECT Outputs using Entity Beans
+
+[![Test Coverage](https://codeclimate.com/github/elchris/easysql/badges/coverage.svg)](https://codeclimate.com/github/elchris/easysql)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/elchris/easysql/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/elchris/easysql/?branch=master)
+[![Build Status](https://scrutinizer-ci.com/g/elchris/easysql/badges/build.png?b=master)](https://scrutinizer-ci.com/g/elchris/easysql/build-status/master)
+
+Compliance & Standards
+======================
+
 * Built [TDD](http://en.wikipedia.org/wiki/Test-driven_development) in [PhpStorm](https://www.jetbrains.com/phpstorm/) with [SOLID](http://en.wikipedia.org/wiki/SOLID_(object-oriented_design)) principles, 100% code coverage thru Unit and Integration Tests
 * [PSR-2](http://www.php-fig.org/psr/psr-2/) coding style
 * [PSR-4](http://www.php-fig.org/psr/psr-4/) auto-loading
 * [Composer Installation](https://getcomposer.org) from [Packagist](https://packagist.org/packages/easysql/easysql)
 * [Semantic Versioning](http://semver.org) will be followed
-
-[![Test Coverage](https://codeclimate.com/github/elchris/easysql/badges/coverage.svg)](https://codeclimate.com/github/elchris/easysql)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/elchris/easysql/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/elchris/easysql/?branch=master)
-[![Build Status](https://scrutinizer-ci.com/g/elchris/easysql/badges/build.png?b=master)](https://scrutinizer-ci.com/g/elchris/easysql/build-status/master)
 
 More Precisely
 ==============
@@ -30,7 +34,7 @@ More Precisely
     * Define multiple applications
     * Define a Master and a Slave connection for each application
 
-Composer Install:
+Composer Installation:
 ======================
 
 https://packagist.org/packages/easysql/easysql
