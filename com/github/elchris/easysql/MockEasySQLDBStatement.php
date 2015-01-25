@@ -19,7 +19,7 @@ class MockEasySQLDBStatement
     }//MockEasySQLDBStatement constructor
 
     /**
-     * @return IEasySQLBean[]
+     * @return array()|\object[]
      */
     public function fetchAsCollection()
     {

@@ -22,7 +22,7 @@ class EasySQLDB implements IEasySQLDB
      * @var string $connectionString
      */
     private $pdo = null;
-    private $connectionId = 0;
+    private $connectionId = '0';
     private $mocked = false;
     private $username = null;
     private $connectionString = null;
@@ -55,7 +55,7 @@ class EasySQLDB implements IEasySQLDB
         }
     }
 
-        /**
+    /**
      * @return string
      */
     public function getConnectionString()
@@ -105,14 +105,14 @@ class EasySQLDB implements IEasySQLDB
      */
     private function stashNewStatement($queryString)
     {
-        /**
-         * @var IEasySQLDBStatement $statementToStash
-         */
-        $statementToStash = $this->mocked
-            ? new MockEasySQLDBStatement()
-            : new EasySQLDBStatement($this->pdo->prepare($queryString));
+        if ($this->mocked) {
+            $statementToStash = new MockEasySQLDBStatement();
+        } else {
+            $pdoStatement = $this->pdo->prepare($queryString);
+            $statementToStash = new EasySQLDBStatement($pdoStatement);
+        }
         $this->preparedStatementStash[$queryString] = $statementToStash;
-    }
+    }//stashNewStatement
 
     /**
      * @return string
@@ -120,7 +120,7 @@ class EasySQLDB implements IEasySQLDB
     public function getId()
     {
         return $this->connectionId;
-    }
+    }//getId
 
     /**
      * @return IEasySQLDBStatement[]

@@ -193,16 +193,18 @@ class EasySQL
 
     /**
      * @param string $query
-     * @param array $params
+     * @param array|null $params
      * @param IEasySQLBean|null $emptyBean
      * @param bool $isWrite is query a write query
      * @return IEasySQLBean[]|\object[]
      */
-    private function runQuery($query, $params, $emptyBean = null, $isWrite = false)
+    private function runQuery($query, $params = null, $emptyBean = null, $isWrite = false)
     {
         $connection = $this->getQueryConnection($query);
         $stmt = $connection->prepareQuery($query);
-        $this->bindParams($params, $stmt);
+        if (!is_null($params)) {
+            $this->bindParams($params, $stmt);
+        }
         $stmt->execute();
         if (!$isWrite) {
             if (is_null($emptyBean)) {
@@ -233,7 +235,7 @@ class EasySQL
     private function getConnection($db, $type)
     {
         $this->manager = $this->getNewEasySQLConnectionManager();
-        if (!$this->manager->isConfigured($this->config)) {
+        if (!is_null($this->config) && !$this->manager->isConfigured($this->config)) {
             $this->manager->setNewConfig($this->config);
         }
         return $this->manager->getDbConnection($db, $type);

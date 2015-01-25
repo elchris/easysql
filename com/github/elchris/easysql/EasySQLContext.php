@@ -50,7 +50,6 @@ class EasySQLContext
         /**
          * @var IEasySQLDB $connection
          */
-        $connection = null;
         if ($this->isConnectionActive($connectionSpec)) {
             $connection = $connectionSpec[EasySQLConnectionManager::KEY_CONNECTION];
             $connection->releaseResources();
@@ -111,7 +110,7 @@ class EasySQLContext
 
     public function resetConnections()
     {
-        $this->connections = null;
+        $this->connections = array();
         $this->unsetInitialized();
     }//unsetInitialized
 
