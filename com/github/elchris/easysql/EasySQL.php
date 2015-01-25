@@ -168,6 +168,14 @@ class EasySQL
     }//insertCollectionOfBeans
 
     /**
+     * @return IEasySQLDB[]
+     */
+    public function cleanUp()
+    {
+        return $this->context->releaseAndGetActiveStashedConnections();
+    }//cleanUp
+
+    /**
      * @return EasySQLBeanQuery
      */
     protected function getNewEasySQLBeanQuery()

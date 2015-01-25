@@ -59,9 +59,38 @@ class EasySQLConfigApplication
         return $this;
     }//setSlave
 
+    private function getHostKey()
+    {
+        if ($this->driver === EasySQLConfig::DRIVER_SQLSRV) {
+            return 'Server';
+        } else {
+            return 'host';
+        }
+    }//getHostKey
+
+    private function getDbNameKey()
+    {
+        if ($this->driver === EasySQLConfig::DRIVER_SQLSRV) {
+            return 'Database';
+        } else {
+            return 'dbname';
+        }
+    }//getDbNameKey
+
+    private function getConnectionString($host, $dbname)
+    {
+        return
+                $this->driver
+                .
+                ':'.$this->getHostKey().'='
+                . $host
+                . ';'.$this->getDbNameKey().'='
+                . $dbname;
+    }//getConnectionString
+
     public function getSlaveConnectionString()
     {
-        return $this->driver . ':host=' . $this->slave[self::HOST] . ';dbname=' . $this->slave[self::DB];
+        return $this->getConnectionString($this->slave[self::HOST], $this->slave[self::DB]);
     }//getSlaveConnectionString
 
     public function getSlaveUsername()
@@ -76,7 +105,7 @@ class EasySQLConfigApplication
 
     public function getMasterConnectionString()
     {
-        return $this->driver . ':host=' . $this->master[self::HOST] . ';dbname=' . $this->master[self::DB];
+        return $this->getConnectionString($this->master[self::HOST], $this->master[self::DB]);
     }//getMasterConnectionString
 
     public function getMasterUsername()
@@ -92,8 +121,12 @@ class EasySQLConfigApplication
 
 class EasySQLConfig
 {
+    /**
+     * @see http://php.net/manual/en/ref.pdo-sqlsrv.connection.php
+     */
     const DRIVER_MYSQL = 'mysql';
     const DRIVER_POSTGRES = 'pgsql';
+    const DRIVER_SQLSRV = 'sqlsrv';
     const KEY_CONNECTION = 'connection';
 
     /**
