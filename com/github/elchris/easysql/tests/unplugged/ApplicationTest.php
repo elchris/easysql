@@ -57,12 +57,12 @@ class MyService
     private static function getDbConfig()
     {
         if (is_null(self::$config)) {
-            $c = new EasySQLConfig(EasySQLConfig::DRIVER_MYSQL);
+            $c = new EasySQLConfig();
             $c
-                ->addApplication('myapplication1')
+                ->addApplication('myapplication1', EasySQLConfig::DRIVER_MYSQL)
                 ->setMaster('app1localhost', 'app1db', 'app1myusername', 'app1mypassword');
             $c
-                ->addApplication('myapplication2')
+                ->addApplication('myapplication2', EasySQLConfig::DRIVER_MYSQL)
                 ->setMaster('app2localhost', 'app2db', 'app2myusername', 'app2mypassword');
             self::$config = $c;
         }

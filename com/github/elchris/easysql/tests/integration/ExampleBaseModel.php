@@ -40,8 +40,8 @@ class ExampleBaseModel
     private static function getConfig()
     {
         if (is_null(self::$config)) {
-            $fig = new EasySQLConfig(EasySQLConfig::DRIVER_MYSQL);
-            $fig->addApplication(self::APP_DATABASE_NAME)
+            $fig = new EasySQLConfig();
+            $fig->addApplication(self::APP_DATABASE_NAME, EasySQLConfig::DRIVER_MYSQL)
                 ->setMaster(self::APP_HOSTNAME, self::APP_DATABASE_NAME, self::APP_USERNAME, self::APP_PASSWORD);;
             self::$config = $fig;
         }
