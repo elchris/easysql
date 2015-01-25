@@ -40,7 +40,7 @@ interface IEasySQLDBStatement
 
 
     /**
-     * @return array()|\object[]
+     * @return array|\object[]
      */
     public function fetchAsCollection();
 
