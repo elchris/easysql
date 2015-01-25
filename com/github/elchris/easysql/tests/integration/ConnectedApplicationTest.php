@@ -51,6 +51,14 @@ class MyApp extends ExampleBaseModel
     }//insertLotsOfCities
 
     /**
+     * @return \com\github\elchris\easysql\EasySQL
+     */
+    public function getDb()
+    {
+        return $this->db();
+    }//getDb
+
+    /**
      * @param $countryCode
      * @return City[]
      */
@@ -149,6 +157,33 @@ class MyApp extends ExampleBaseModel
 
 class ConnectedApplicationTest extends EasySQLUnitTest
 {
+
+    public function testZeroConnectionCleanedUp()
+    {
+        $a = new MyApp(new EasySQLContext());
+        $cleanedConnections = $a->getDb()->cleanUp();
+        $this->assertCount(0,$cleanedConnections);
+    }//testZeroConnectionCleanedUp
+
+    public function testOneConnectionCleanedUp()
+    {
+        $a = new MyApp(new EasySQLContext());
+        $a->getCitiesByCountryCode('RUS');
+        $cleanedConnections = $a->getDb()->cleanUp();
+        $this->assertCount(1,$cleanedConnections);
+    }//testOneConnectionCleanedUp
+
+    public function testTwoConnectionsCleanedUp()
+    {
+        $a = new MyApp(new EasySQLContext());
+        $a->getCitiesByCountryCode('RUS');
+        $this->deleteFakeCities($a);
+        $a->insertLotsOfCities(5, true);
+        $this->deleteFakeCities($a);
+        $cleanedConnections = $a->getDb()->cleanUp();
+        $this->assertCount(2,$cleanedConnections);
+    }//testTwoConnectionsCleanedUp
+
     public function testGetCitiesForRussia()
     {
         $a = new MyApp(new EasySQLContext());
@@ -221,12 +256,17 @@ class ConnectedApplicationTest extends EasySQLUnitTest
             $cities = $a->getCitiesByCountryCode('FKE');
             $this->assertCount($totalCities, $cities);
         }
-        $a->db()->write('DELETE FROM City WHERE CountryCode = "FKE";');
+        $this->deleteFakeCities($a);
         if (!$skipVerification) {
             $cities = $a->getCitiesByCountryCode('FKE');
             $this->assertCount(0, $cities);
         }
     }//verifyCityCountAndReset
+
+    private function deleteFakeCities(MyApp $a)
+    {
+        $a->db()->write('DELETE FROM City WHERE CountryCode = "FKE";');
+    }//deleteFakeCities
 
     public function testSpeedOfInserts()
     {

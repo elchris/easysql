@@ -20,5 +20,13 @@ class EasySQLTest extends EasySQLUnitTest
         $s->setTestMode();
         $this->assertTrue($s->isTestMode());
     }
+
+    public function testZeroConnectionCleanedUp()
+    {
+        $s = new EasySQL(new EasySQLContext(), 'application1');
+        $s->setTestMode();
+        $cleanedConnections = $s->cleanUp();
+        $this->assertCount(0,$cleanedConnections);
+    }
 }//EasySQLTest
  
