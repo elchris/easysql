@@ -23,7 +23,7 @@ class FakeEasySQLConnectionManager extends EasySQLConnectionManager
 
 class EasySQLConnectionManagerUnitTest extends EasySQLUnitTest
 {
-    const TEST_CONFIG_JSON = '{"test_application1":{"master":{"string":"mysql:host=masterconnection1.host;dbname=name1","u":"uname1master","p":"pass1master","connection":null},"slave":{"string":"mysql:host=slaveconnection1.host;dbname=name1","u":"uname1slave","p":"pass1slave","connection":null}}}';
+    const TEST_CONFIG_JSON = '{"test_application1":{"driverOptions":[],"master":{"string":"mysql:host=masterconnection1.host;dbname=name1","u":"uname1master","p":"pass1master","connection":null},"slave":{"string":"mysql:host=slaveconnection1.host;dbname=name1","u":"uname1slave","p":"pass1slave","connection":null}}}';
 
     /**
      * @expectedException Exception

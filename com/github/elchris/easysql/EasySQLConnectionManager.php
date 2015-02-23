@@ -156,14 +156,20 @@ class EasySQLConnectionManager implements IEasySQLConnectionManager
      * @param $applicationName
      * @param $type
      * @return IEasySQLDB
+     * @throws Exception
      */
     private function getNewConnectionForApplicationAndType($applicationName, $type)
     {
-        return $this->getNewConnection(
-            $this->context->getConnections()[$applicationName][$type][self::KEY_CONNECTION_STRING],
-            $this->context->getConnections()[$applicationName][$type][self::KEY_USERNAME],
-            $this->context->getConnections()[$applicationName][$type][self::KEY_PASSWORD]
-        );
+        try {
+            return $this->getNewConnection(
+                $this->context->getConnections()[$applicationName][$type][self::KEY_CONNECTION_STRING],
+                $this->context->getConnections()[$applicationName][$type][self::KEY_USERNAME],
+                $this->context->getConnections()[$applicationName][$type][self::KEY_PASSWORD],
+                $this->context->getConnections()[$applicationName]['driverOptions']
+            );
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
     }//getNewConnectionForApplicationAndType
 
     /**
@@ -172,9 +178,11 @@ class EasySQLConnectionManager implements IEasySQLConnectionManager
      * @param string $p
      * @return IEasySQLDB
      */
-    protected function getNewConnection($connectionString, $u, $p)
+    protected function getNewConnection($connectionString, $u, $p, $driverOptions)
     {
-        return new EasySQLDB($connectionString, $u, $p, $this->mocked);
+        $db = new EasySQLDB($connectionString, $u, $p, $this->mocked);
+        $db->setDriverOptions($driverOptions);
+        return $db;
     }//getNewConnection
 
     /**

@@ -26,6 +26,7 @@ class EasySQLDB implements IEasySQLDB
     private $mocked = false;
     private $username = null;
     private $connectionString = null;
+    private $driverOptions = array();
     /**
      * @var IEasySQLDBStatement[string] $preparedStatementStash
      */
@@ -46,7 +47,12 @@ class EasySQLDB implements IEasySQLDB
         $this->username = $u;
         if (!$this->mocked) {
             try {
-                $this->pdo = new PDO($connectionString, $u, $p, array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+                $connectionOptions = array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION);
+                foreach($this->driverOptions as $optionKey => $optionValue)
+                {
+                    $connectionOptions[$optionKey] = $optionValue;
+                }
+                $this->pdo = new PDO($connectionString, $u, $p, $connectionOptions);
             } catch (Exception $e) {
                 //don't let PDO leak out the pw:
                 //Catch exception and throw-up a safer one.
@@ -54,6 +60,14 @@ class EasySQLDB implements IEasySQLDB
             }
         }
     }
+
+    /**
+     * @param array()
+     */
+    public function setDriverOptions($options)
+    {
+        $this->driverOptions = $options;
+    }//setDriverOptions
 
     /**
      * @return string

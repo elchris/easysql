@@ -19,6 +19,7 @@ class EasySQLConfigApplication
     private $driver = null;
     private $master = null;
     private $slave = null;
+    private $driverOptions = array();
 
     public function __construct($driver)
     {
@@ -26,6 +27,24 @@ class EasySQLConfigApplication
         $this->master = array();
         $this->slave = array();
     }//EasySQLConfigApplication constructor
+
+    /**
+     * @param $driverOptions
+     * @return $this
+     */
+    public function setDriverOptions($driverOptions)
+    {
+        $this->driverOptions = $driverOptions;
+        return $this;
+    }//setDriverOptions
+
+    /**
+     * @return array
+     */
+    public function getDriverOptions()
+    {
+        return $this->driverOptions;
+    }//getDriverOptions
 
     public function setMaster($host, $db, $username, $password)
     {
@@ -168,6 +187,7 @@ class EasySQLConfig
         $a = array();
         foreach ($this->apps as $appName => $appConfig) {
             $a[$appName] = array();
+            $a[$appName]['driverOptions'] = $appConfig->getDriverOptions();
             $a[$appName][EasySQLQueryAnalyzer::CONNECTION_MASTER] = array();
             $a[$appName][EasySQLQueryAnalyzer::CONNECTION_MASTER][EasySQLConnectionManager::KEY_CONNECTION_STRING]
                 = $appConfig->getMasterConnectionString();

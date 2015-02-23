@@ -13,8 +13,8 @@ use com\github\elchris\easysql\EasySQLConfig;
 class EasySQLConfigTest extends EasySQLUnitTest
 {
 
-    const TEST_APP_CONFIG_JSON = '{"app":{"master":{"string":"mysql:host=m;dbname=d","u":"u","p":"p","connection":null},"slave":{"string":"mysql:host=sm;dbname=sd","u":"su","p":"sp","connection":null}}}';
-    const SQL_SERVER_CONFIG_JSON = '{"sqlserverapp":{"master":{"string":"sqlsrv:Server=sqlserverhost-master;Database=database","u":"username","p":"password","connection":null},"slave":{"string":"sqlsrv:Server=sqlserverhost-slave;Database=database","u":"username","p":"password","connection":null}}}';
+    const TEST_APP_CONFIG_JSON = '{"app":{"driverOptions":[],"master":{"string":"mysql:host=m;dbname=d","u":"u","p":"p","connection":null},"slave":{"string":"mysql:host=sm;dbname=sd","u":"su","p":"sp","connection":null}}}';
+    const SQL_SERVER_CONFIG_JSON = '{"sqlserverapp":{"driverOptions":[],"master":{"string":"sqlsrv:Server=sqlserverhost-master;Database=database","u":"username","p":"password","connection":null},"slave":{"string":"sqlsrv:Server=sqlserverhost-slave;Database=database","u":"username","p":"password","connection":null}}}';
 
     public function testSetProps()
     {
