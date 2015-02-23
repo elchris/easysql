@@ -3,11 +3,12 @@ EasySQL
 
 Work more effectively with SQL for Performance, Security and Code Readability:
 
+* Strongly-Typed returns on SELECT operations, returning instances of Entity Beans
+* Strongly-Typed INSERT operations allowing easy insertion of collections of Entity Beans
+* First-Class support for Master and Slave connections, with transparent dispatching of queries to appropriate connection
 * Optimal management of PDO Connections and Prepared Statements across an execution context
    * Reusable connections are managed via a shared "Execution Context", allowing you to use and reuse as many "Model" Class instances as convenient without constantly opening-up and tearing-down connections.
    * Each connection keeps track of "Prepared Statements" tied to each new "Query String" it sees. Should the same query be invoked via another method or class later within an Execution Context, the previously-generated Prepared Statement tied to that query will be reused.
-* Transparent dispatching of queries to Master or Slave connection
-* Strongly-typed INSERT Inputs and SELECT Outputs using Entity Beans
 
 [![Test Coverage](https://codeclimate.com/github/elchris/easysql/badges/coverage.svg)](https://codeclimate.com/github/elchris/easysql)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/elchris/easysql/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/elchris/easysql/?branch=master)
