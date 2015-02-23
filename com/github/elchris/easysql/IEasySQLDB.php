@@ -39,9 +39,4 @@ interface IEasySQLDB
      * @return IEasySQLDBStatement[]
      */
     public function releaseResources();
-
-    /**
-     * @param array()
-     */
-    public function setDriverOptions($options);
 }

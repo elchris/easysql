@@ -37,10 +37,12 @@ class EasySQLDB implements IEasySQLDB
      * @param string $u
      * @param string $p
      * @param boolean $testMode
+     * @param array $driverOptions
      * @throws Exception
      */
-    public function __construct($connectionString, $u, $p, $testMode = false)
+    public function __construct($connectionString, $u, $p, $testMode = false, $driverOptions = array())
     {
+        $this->driverOptions = $driverOptions;
         $this->connectionId = $connectionString . ' ' . microtime() . ' ' . ++self::$connectionCounter;
         $this->mocked = $testMode;
         $this->connectionString = $connectionString;
@@ -56,18 +58,10 @@ class EasySQLDB implements IEasySQLDB
             } catch (Exception $e) {
                 //don't let PDO leak out the pw:
                 //Catch exception and throw-up a safer one.
-                throw new Exception('Error connecting to: ' . $connectionString);
+                throw new Exception('Error connecting to: ' . $connectionString.': '.$e->getMessage());
             }
         }
     }
-
-    /**
-     * @param array()
-     */
-    public function setDriverOptions($options)
-    {
-        $this->driverOptions = $options;
-    }//setDriverOptions
 
     /**
      * @return string
