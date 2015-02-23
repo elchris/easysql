@@ -176,12 +176,12 @@ class EasySQLConnectionManager implements IEasySQLConnectionManager
      * @param string $connectionString
      * @param string $u
      * @param string $p
+     * @param $driverOptions
      * @return IEasySQLDB
      */
     protected function getNewConnection($connectionString, $u, $p, $driverOptions)
     {
-        $db = new EasySQLDB($connectionString, $u, $p, $this->mocked);
-        $db->setDriverOptions($driverOptions);
+        $db = new EasySQLDB($connectionString, $u, $p, $this->mocked, $driverOptions);
         return $db;
     }//getNewConnection
 
