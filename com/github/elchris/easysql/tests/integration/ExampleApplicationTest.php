@@ -180,6 +180,14 @@ class ExampleApplicationTest extends EasySQLUnitTest
         parent::__construct($name, $data, $dataName);
     }
 
+    public function testDriverOptions()
+    {
+        $wm = new WorldModel($this->ctx);
+        $options = $wm->getDriverOptions();
+        $this->assertArrayHasKey('foo',$options);
+        $this->assertEquals('bar',$options['foo']);
+    }//testDriverOptions
+
     public function testGetCountryAndCapital()
     {
         $wm = new WorldModel($this->ctx);

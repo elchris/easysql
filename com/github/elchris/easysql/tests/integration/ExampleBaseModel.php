@@ -42,9 +42,16 @@ class ExampleBaseModel
         if (is_null(self::$config)) {
             $fig = new EasySQLConfig();
             $fig->addApplication(self::APP_DATABASE_NAME, EasySQLConfig::DRIVER_MYSQL)
-                ->setMaster(self::APP_HOSTNAME, self::APP_DATABASE_NAME, self::APP_USERNAME, self::APP_PASSWORD);;
+                ->setMaster(self::APP_HOSTNAME, self::APP_DATABASE_NAME, self::APP_USERNAME, self::APP_PASSWORD)
+                ->setDriverOptions(array('foo' => 'bar'))
+            ;
             self::$config = $fig;
         }
         return self::$config;
     }//getConfig
+
+    public function getDriverOptions()
+    {
+        return self::getConfig()->getAsArray()[self::APP_DATABASE_NAME]['driverOptions'];
+    }//getDriverOptions
 }//ExampleBaseModel

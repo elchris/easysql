@@ -55,4 +55,18 @@ class EasySQLConfigTest extends EasySQLUnitTest
         ;
         $this->assertEquals(self::SQL_SERVER_CONFIG_JSON, $c->getAsJson());
     }//testSqlServer
+
+    public function testSetDriverOptions()
+    {
+        $c = new EasySQLConfig();
+        $c->addApplication('sqlserverapp',EasySQLConfig::DRIVER_SQLSRV)
+            ->setMaster('sqlserverhost-master','database','username','password')
+            ->setSlave('sqlserverhost-slave','database','username','password')
+            ->setDriverOptions(array('foo' => 'bar'))
+        ;
+        $arrayConfig = $c->getAsArray();
+        $options = $arrayConfig['sqlserverapp']['driverOptions'];
+        $this->assertArrayHasKey('foo',$options);
+        $this->assertEquals('bar',$options['foo']);
+    }//testSetDriverOptions
 }//EasySQLConfigTest
