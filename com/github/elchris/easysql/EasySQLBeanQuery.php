@@ -103,7 +103,10 @@ class EasySQLBeanQuery
         $props = array();
         foreach ($bean->getReflectionClass()->getProperties() as $beanProp) {
             if ($beanProp->isPublic()) {
-                $props[$beanProp->getName()] = $beanProp->getValue($bean);
+                $value = $beanProp->getValue($bean);
+                if (!is_null($value)) {
+                    $props[$beanProp->getName()] = $value;
+                }
             }
         }
         return $props;
