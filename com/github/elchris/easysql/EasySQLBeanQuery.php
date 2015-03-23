@@ -53,7 +53,7 @@ class EasySQLBeanQuery
             . $table
             . ' ('
             . implode(
-                ',', $columnsArray
+                ',', $this->sanitizeColumns($columnsArray)
             )
             . ') VALUES '
             . implode(
@@ -114,10 +114,18 @@ class EasySQLBeanQuery
 
     private function getInsertQueryForPropsAndTable($props, $table)
     {
-        $columns = implode(', ', array_keys($props));
+        $columns = implode(', ', $this->sanitizeColumns(array_keys($props)));
         $values = ':' . implode(', :', array_keys($props));
         $q = 'INSERT INTO'
             . $table . ' (' . $columns . ') VALUES (' . $values . ');';
         return $q;
     }//getInsertQueryForPropsAndTable
+
+    private function sanitizeColumns($propKeys)
+    {
+        array_walk($propKeys, function(&$thekey) {
+            $thekey = '`'.$thekey.'`';
+        });
+        return $propKeys;
+    }//sanitizeColumns
 }//EasySQLBeanQuery
