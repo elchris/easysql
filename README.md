@@ -3,6 +3,7 @@ EasySQL
 
 Work more effectively with SQL for Performance, Security and Code Readability:
 
+* Exposes Simple API - Takes care of PDO and Prepared Statement management so you don't have to
 * Strongly-Typed returns on SELECT operations, returning instances of Entity Beans
 * Strongly-Typed INSERT operations allowing easy insertion of collections of Entity Beans
 * First-Class support for Master and Slave connections, with transparent dispatching of queries to appropriate connection
