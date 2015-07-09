@@ -188,6 +188,8 @@ class ConnectedApplicationTest extends EasySQLUnitTest
     {
         $a = new MyApp(new EasySQLContext());
         $russianCities = $a->getCitiesByCountryCode('RUS');
+        $this->assertNotNull($russianCities);
+        $this->assertNotEmpty($russianCities);
         foreach ($russianCities as $city) {
             $this->assertEquals('RUS', $city->CountryCode);
             $this->assertGreaterThan(1000, $city->Population);
@@ -203,6 +205,8 @@ class ConnectedApplicationTest extends EasySQLUnitTest
             $this->assertGreaterThan(500.00, $country->GNP);
         }
         $northAmericanCountries = $a->getCountriesByContinent('North America', 100.0, 100000.0);
+        $this->assertNotNull($northAmericanCountries);
+        $this->assertNotEmpty($northAmericanCountries);
         foreach ($northAmericanCountries as $country) {
             $this->assertGreaterThan(100.00, $country->GNP);
             $this->assertLessThan(100000.00, $country->GNP);
@@ -215,6 +219,8 @@ class ConnectedApplicationTest extends EasySQLUnitTest
     {
         $a = new MyApp(new EasySQLContext(), true);
         $russianCities = $a->getCitiesByCountryCode('RUS');
+        $this->assertNotNull($russianCities);
+        $this->assertNotEmpty($russianCities);
         foreach ($russianCities as $city) {
             $this->assertEquals('RUS', $city['CountryCode']);
             $this->assertGreaterThan(1000, $city['Population']);

@@ -208,6 +208,8 @@ class ExampleApplicationTest extends EasySQLUnitTest
     {
         $wm = new WorldModel($this->ctx);
         $frenchCities = $wm->getCitiesByCountryCode('FRA');
+        $this->assertNotNull($frenchCities);
+        $this->assertNotEmpty($frenchCities);
         $cityNames = array();
         foreach ($frenchCities as $city) {
             $this->debug($city->Name . ': ' . $city->Population);

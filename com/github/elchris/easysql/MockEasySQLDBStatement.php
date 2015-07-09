@@ -24,7 +24,7 @@ class MockEasySQLDBStatement
     public function fetchAsCollection()
     {
         $resultSet = array(array(), array(), array());
-        parent::afterQuery();
+        $this->afterQuery();
         return $resultSet;
     }//fetchAsCollection
 
@@ -36,7 +36,7 @@ class MockEasySQLDBStatement
     {
         $className = $emptyBeanInstance->getClassName();
         $resultSet = array(new $className, new $className, new $className);
-        parent::afterQuery();
+        $this->afterQuery();
         return $resultSet;
     }//fetchAsCollectionOf
 }//MockEasySQLDBStatement

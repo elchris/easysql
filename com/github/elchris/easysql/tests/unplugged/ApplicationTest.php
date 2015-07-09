@@ -76,6 +76,8 @@ class ApplicationTest extends EasySQLUnitTest
     {
         $s = new MyService(new EasySQLContext());
         $books = $s->getBooksByTitle('Clean Code');
+        $this->assertNotNull($books);
+        $this->assertNotEmpty($books);
         foreach ($books as $book) {
             $this->assertInstanceOf('com\github\elchris\easysql\tests\Book', $book);
         }

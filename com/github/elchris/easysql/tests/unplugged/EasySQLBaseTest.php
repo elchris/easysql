@@ -68,8 +68,7 @@ class TestDAO extends EasySQL
 
     public function isTest()
     {
-        $parentIsTest = parent::isTestMode();
-        return array($parentIsTest, $this->isTestMode());
+        return $this->isTestMode();
     }//isTestMode
 
     public function isTestMode()
@@ -330,11 +329,15 @@ class EasySQLBaseTest extends EasySQLUnitTest
         $ctx = new EasySQLContext();
         $test = new TestDAO($ctx, $this->getReadQuery());
         $results = $test->getMyBeanCollection(array('one', 'two', 'three'));
+        $this->assertNotNull($results);
+        $this->assertNotEmpty($results);
         foreach ($results as $result) {
             $this->assertInstanceOf('com\github\elchris\easysql\IEasySQLBean', $result);
             $this->assertInstanceOf('com\github\elchris\easysql\tests\MyBean', $result);
         }
         $results = $test->getMyBeanCollection(array('key1' => 'value1', 'key2' => 'value2'));
+        $this->assertNotNull($results);
+        $this->assertNotEmpty($results);
         foreach ($results as $result) {
             $this->assertInstanceOf('com\github\elchris\easysql\IEasySQLBean', $result);
             $this->assertInstanceOf('com\github\elchris\easysql\tests\MyBean', $result);
@@ -344,8 +347,7 @@ class EasySQLBaseTest extends EasySQLUnitTest
     public function testIsTestModeIsTrue()
     {
         $test = new TestDAO(new EasySQLContext(), $this->getReadQuery());
-        $this->assertFalse($test->isTest()[0]);
-        $this->assertTrue($test->isTest()[1]);
+        $this->assertTrue($test->isTest());
     }//testInsertCollectionOfBeansWithTableName
 
     public function testGotGenericArray()
