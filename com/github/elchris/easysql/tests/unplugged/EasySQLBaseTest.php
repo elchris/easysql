@@ -48,7 +48,7 @@ class RealDAO extends EasySQL
 
     public function getStuff()
     {
-        return $this->getAsCollectionOf(new MyBean(), 'SELECT * FROM table;');
+        return $this->getAsCollectionOf(new MyBean(), 'SELECT * FROM atable;');
     }//getStuff
 }//RealDAO
 
@@ -164,9 +164,9 @@ class TestDAO extends EasySQL
  */
 class EasySQLBaseTest extends EasySQLUnitTest
 {
-    const MYBEAN_INSERT = 'INSERT INTO mybean (propOne, propTwo) VALUES (:propOne, :propTwo);';
-    const MYBEAN_COLLECTION_INSERT = 'INSERT INTO mybean (propOne,propTwo) VALUES (?,?),(?,?),(?,?);';
-    const MYBEAN_COLLECTION_INSERT_YOURBEAN = 'INSERT INTO yourbean (propOne,propTwo) VALUES (?,?),(?,?),(?,?);';
+    const MYBEAN_INSERT = 'INSERT INTO mybean (`propOne`, `propTwo`) VALUES (:propOne, :propTwo);';
+    const MYBEAN_COLLECTION_INSERT = 'INSERT INTO mybean (`propOne`,`propTwo`) VALUES (?,?),(?,?),(?,?);';
+    const MYBEAN_COLLECTION_INSERT_YOURBEAN = 'INSERT INTO yourbean (`propOne`,`propTwo`) VALUES (?,?),(?,?),(?,?);';
 
     /**
      * @expectedException Exception
