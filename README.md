@@ -13,6 +13,7 @@ Work more effectively with SQL for Performance, Security and Code Readability:
 
 [![Test Coverage](https://codeclimate.com/github/elchris/easysql/badges/coverage.svg)](https://codeclimate.com/github/elchris/easysql)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/elchris/easysql/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/elchris/easysql/?branch=master)
+[![Code Climate](https://codeclimate.com/github/elchris/easysql/badges/gpa.svg)](https://codeclimate.com/github/elchris/easysql)
 [![Build Status](https://scrutinizer-ci.com/g/elchris/easysql/badges/build.png?b=master)](https://scrutinizer-ci.com/g/elchris/easysql/build-status/master)
 
 Compliance & Standards
