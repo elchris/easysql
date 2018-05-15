@@ -18,49 +18,5 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module-library">
-      <library name="PHP">
-        <CLASSES>
-          <root url="file://$MODULE_DIR$/vendor/guzzle/guzzle" />
-          <root url="file://$MODULE_DIR$/vendor/codeclimate/php-test-reporter" />
-          <root url="file://$MODULE_DIR$/vendor/symfony/event-dispatcher" />
-          <root url="file://$MODULE_DIR$/vendor/satooshi/php-coveralls" />
-          <root url="file://$MODULE_DIR$/vendor/symfony/config" />
-          <root url="file://$MODULE_DIR$/vendor/symfony/yaml" />
-          <root url="file://$MODULE_DIR$/vendor/composer" />
-          <root url="file://$MODULE_DIR$/vendor/symfony/filesystem" />
-          <root url="file://$MODULE_DIR$/vendor/symfony/stopwatch" />
-          <root url="file:///usr/local/bin/phpunit.phar" />
-          <root url="file://$MODULE_DIR$/vendor/psr/log" />
-          <root url="file://$MODULE_DIR$/vendor/symfony/console" />
-        </CLASSES>
-        <SOURCES>
-          <root url="file://$MODULE_DIR$/vendor/guzzle/guzzle" />
-          <root url="file://$MODULE_DIR$/vendor/codeclimate/php-test-reporter" />
-          <root url="file://$MODULE_DIR$/vendor/symfony/event-dispatcher" />
-          <root url="file://$MODULE_DIR$/vendor/satooshi/php-coveralls" />
-          <root url="file://$MODULE_DIR$/vendor/symfony/config" />
-          <root url="file://$MODULE_DIR$/vendor/symfony/yaml" />
-          <root url="file://$MODULE_DIR$/vendor/composer" />
-          <root url="file://$MODULE_DIR$/vendor/symfony/filesystem" />
-          <root url="file://$MODULE_DIR$/vendor/symfony/stopwatch" />
-          <root url="file:///usr/local/bin/phpunit.phar" />
-          <root url="file://$MODULE_DIR$/vendor/psr/log" />
-          <root url="file://$MODULE_DIR$/vendor/symfony/console" />
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="PHARS">
-        <CLASSES>
-          <root url="phar://$MODULE_DIR$/composer.phar" />
-          <root url="phar:///usr/local/bin/phpunit.phar" />
-        </CLASSES>
-        <SOURCES>
-          <root url="phar://$MODULE_DIR$/composer.phar" />
-          <root url="phar:///usr/local/bin/phpunit.phar" />
-        </SOURCES>
-      </library>
-    </orderEntry>
   </component>
 </module>
